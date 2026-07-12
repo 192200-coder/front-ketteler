@@ -1,0 +1,51 @@
+<main class="mobile-container">
+  <header class="header-nav">
+    <button class="btn-back" (click)="goBack()">
+      <i class="fa-solid fa-chevron-left"></i> Atrás
+    </button>
+  </header>
+
+  <section class="content-section">
+    <h1 class="page-title">Cambiar contraseña</h1>
+    <p class="page-subtitle">Reestablece tu contraseña para mayor seguridad</p>
+
+    <form (submit)="onSave($event)" class="password-form">
+      <div class="input-group">
+        <label>Nueva contraseña</label>
+        <div class="input-wrapper">
+          <input [type]="showPass1 ? 'text' : 'password'" 
+                 id="newPassword" name="newPassword"
+                 [(ngModel)]="newPassword"
+                 placeholder="••••••••" required>
+          <i class="fa-regular icon-right" 
+             [class.fa-eye-slash]="!showPass1" 
+             [class.fa-eye]="showPass1" 
+             (click)="showPass1 = !showPass1"></i>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Repite tu nueva contraseña</label>
+        <div class="input-wrapper">
+          <input [type]="showPass2 ? 'text' : 'password'" 
+                 id="confirmPassword" name="confirmPassword"
+                 [(ngModel)]="confirmPassword"
+                 placeholder="••••••••" required>
+          <i class="fa-regular icon-right" 
+             [class.fa-eye-slash]="!showPass2" 
+             [class.fa-eye]="showPass2" 
+             (click)="showPass2 = !showPass2"></i>
+        </div>
+      </div>
+
+      @if (errorMessage()) {
+        <p class="login-error">{{ errorMessage() }}</p>
+      }
+
+      <div class="actions">
+        <button type="submit" class="btn-submit">Guardar contraseña</button>
+        <button type="button" class="btn-skip" (click)="onSkip()">Omitir</button>
+      </div>
+    </form>
+  </section>
+</main>

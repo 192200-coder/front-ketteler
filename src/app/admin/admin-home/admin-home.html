@@ -1,0 +1,71 @@
+<main class="admin-dashboard">
+  <header class="dashboard-header">
+    <h1 class="panel-title">Panel de control</h1>
+    <button class="btn-logout-admin" (click)="logout()">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+    </button>
+  </header>
+
+  <section class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-info">
+        <span class="kpi-label">Total residentes</span>
+        <span class="kpi-value">{{ totalResidentes() }}</span>
+      </div>
+      <i class="fa-solid fa-users kpi-icon"></i>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-info">
+        <span class="kpi-label">Presentes hoy</span>
+        <span class="kpi-value">{{ presentes() }}</span>
+      </div>
+      <i class="fa-solid fa-user-check kpi-icon"></i>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-info">
+        <span class="kpi-label">Ausentes hoy</span>
+        <span class="kpi-value">{{ ausentes() }}</span>
+      </div>
+      <i class="fa-solid fa-user-minus kpi-icon"></i>
+    </div>
+  </section>
+
+  <div class="dashboard-content">
+    <section class="activity-section">
+      <h2 class="section-title">Actividad reciente</h2>
+      <div class="activity-list">
+        @for (act of actividades(); track act.hora) {
+          <div class="activity-card">
+            <div class="activity-user-details">
+              <span class="user-name">{{ act.nombre }}</span>
+              <span
+                class="action-type"
+                [class.type-in]="act.tipo === 'Entrada'"
+                [class.type-out]="act.tipo === 'Salida'"
+              >
+                {{ act.tipo }}
+              </span>
+            </div>
+            <span class="activity-time">{{ act.hora }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="actions-section">
+      <h2 class="section-title">Acciones rápidas</h2>
+      <div class="quick-actions-grid">
+        <button class="btn-action-green" (click)="goToGestionarUsuarios()">
+          <i class="fa-solid fa-user-gear"></i>
+          <span>Gestionar usuarios</span>
+        </button>
+        <button class="btn-action-purple" (click)="verReportesAlert()">
+          <i class="fa-regular fa-file-lines"></i>
+          <span>Ver reportes</span>
+        </button>
+      </div>
+    </section>
+  </div>
+</main>

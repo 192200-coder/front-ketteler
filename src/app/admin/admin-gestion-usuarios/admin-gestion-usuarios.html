@@ -1,0 +1,62 @@
+<div class="admin-container">
+  <div class="header">
+    <div class="title-section">
+      <h2>Gestión de usuarios</h2>
+      <p>Administra las cuentas de residentes</p>
+    </div>
+    <button class="btn-primary" routerLink="/admin-crear-usuario">+ Nuevo usuario</button>
+  </div>
+
+  @if (mensaje()) {
+    <p class="login-error">{{ mensaje() }}</p>
+  }
+
+  <div class="table-card">
+    <div class="search-bar">
+      <span>🔍</span>
+      <input type="text" placeholder="Buscar por nombre o usuario">
+    </div>
+
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Usuario</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (cargando()) {
+          <tr><td colspan="5">Cargando usuarios...</td></tr>
+        } @else {
+          @for (user of usuarios(); track user.idUser) {
+            <tr>
+              <td>{{ user.firstName }} {{ user.surName }}</td>
+              <td>{{ user.email }}</td>
+              <td><span class="badge badge-rol">{{ user.role }}</span></td>
+              <td>
+                <span class="badge" [ngClass]="user.active ? 'badge-activo' : 'badge-inactivo'">
+                  {{ user.active ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="actions">
+                <button class="icon-btn edit" title="Editar" (click)="editarUsuario(user.idUser)">📝</button>
+                <button class="icon-btn delete" title="Eliminar" (click)="eliminarUsuario(user.idUser)">🗑️</button>
+                <button class="icon-btn" title="Restablecer contraseña" (click)="resetearPassword(user.idUser)">🔑</button>
+                <button class="icon-btn" title="Ver documentos" (click)="verDocumentos(user.idUser)">📄</button>
+                <button class="icon-btn" title="Subir documento de entrada" onclick="this.nextElementSibling.click()">📥</button>
+                <input type="file" hidden (change)="subirDocumentoEntrada(user.idUser, $event)">
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer-actions">
+    <button class="btn-back" routerLink="/admin-home"> &lt; Atrás </button>
+  </div>
+</div>

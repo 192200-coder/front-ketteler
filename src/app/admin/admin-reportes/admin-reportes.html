@@ -1,0 +1,162 @@
+<div class="admin-container">
+  <div class="header">
+    <div class="title-section">
+      <h2>Reportes de asistencia</h2>
+      <p>Genera y descarga reportes</p>
+    </div>
+    <button class="btn-back" routerLink="/admin-home">&lt; Atrás</button>
+  </div>
+
+  <div class="filter-card">
+    <div class="filter-group">
+      <label>Tipo de reporte</label>
+      <div class="button-group">
+        <button class="btn-tab" [class.active]="rango() === 'diario'" (click)="setRango('diario')">
+          Diario
+        </button>
+        <button
+          class="btn-tab"
+          [class.active]="rango() === 'semanal'"
+          (click)="setRango('semanal')"
+        >
+          Semanal
+        </button>
+        <button
+          class="btn-tab"
+          [class.active]="rango() === 'mensual'"
+          (click)="setRango('mensual')"
+        >
+          Mensual
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label>Fecha</label>
+      <input
+        type="date"
+        class="date-input"
+        [(ngModel)]="fechaSeleccionada"
+        (change)="onFechaChange()"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>Residente</label>
+      <select class="date-input" [(ngModel)]="idUserFiltro" (change)="onFiltroCambio()">
+        <option value="">Todos</option>
+        @for (u of usuarios(); track u.idUser) {
+          <option [value]="u.idUser">{{ u.firstName }} {{ u.surName }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>&nbsp;</label>
+      <div style="display: flex; gap: 0.5rem">
+        <button class="btn-success" (click)="descargar('excel')">
+          <i class="fa-solid fa-file-excel"></i> Excel
+        </button>
+        <button class="btn-success" (click)="descargar('pdf')">
+          <i class="fa-solid fa-file-pdf"></i> PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card mt-20">
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      "
+    >
+      <p class="table-title" style="margin: 0">Vista previa — reporte {{ rango() }}</p>
+      <button class="btn-tab" style="font-size: 0.8rem" (click)="toggleOrden()">
+        Fecha {{ ordenDesc() ? '↓ desc' : '↑ asc' }}
+      </button>
+    </div>
+
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Residente</th>
+          <th>Entrada</th>
+          <th>Salida</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (cargando()) {
+          <tr>
+            <td colspan="4" style="text-align: center; padding: 2rem">Cargando...</td>
+          </tr>
+        } @else if (reportes().length === 0) {
+          <tr>
+            <td colspan="4" style="text-align: center; padding: 2rem">
+              Sin registros en el rango seleccionado.
+            </td>
+          </tr>
+        } @else {
+          @for (rep of reportes(); track rep.entryDate) {
+            <tr>
+              <td>{{ rep.firstName }} {{ rep.surName }}</td>
+              <td>{{ rep.entryDate ? (rep.entryDate | date: 'dd/MM/yyyy HH:mm') : '—' }}</td>
+              <td>
+                {{ rep.departureDate ? (rep.departureDate | date: 'dd/MM/yyyy HH:mm') : '—' }}
+              </td>
+              <td>
+                <span class="badge" [ngClass]="rep.status ? 'badge-ausente' : 'badge-completo'">
+                  {{ rep.status ? 'Dentro' : 'Completo' }}
+                </span>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+
+    @if (totalPaginas() > 1) {
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-top: 1rem;
+          flex-wrap: wrap;
+        "
+      >
+        <button
+          class="btn-tab"
+          [disabled]="paginaActual() === 0"
+          (click)="irPagina(paginaActual() - 1)"
+          style="font-size: 0.8rem"
+        >
+          ‹ Ant
+        </button>
+
+        @for (p of paginasArray(); track p) {
+          <button
+            class="btn-tab"
+            [class.active]="paginaActual() === p"
+            (click)="irPagina(p)"
+            style="font-size: 0.8rem; min-width: 2rem"
+          >
+            {{ p + 1 }}
+          </button>
+        }
+
+        <button
+          class="btn-tab"
+          [disabled]="paginaActual() === totalPaginas() - 1"
+          (click)="irPagina(paginaActual() + 1)"
+          style="font-size: 0.8rem"
+        >
+          Sig ›
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<main class="mobile-container">
+  <header class="header-nav">
+    <button class="btn-back" (click)="goBack()">
+      <i class="fa-solid fa-chevron-left"></i> Atrás
+    </button>
+  </header>
+
+  <h1 class="page-title">Historial de asistencia</h1>
+
+  <section class="history-list">
+    @for (registro of asistencias(); track registro.fecha) {
+      <div class="history-item">
+        <div class="status-indicator">
+          <i class="fa-solid fa-circle-check check-icon"></i>
+        </div>
+        <div class="history-details">
+          <span class="history-date">{{ registro.fecha }}</span>
+          <span class="history-time">{{ registro.entrada }} - {{ registro.salida }}</span>
+        </div>
+        <div class="status-badge">{{ registro.estado }}</div>
+      </div>
+    } @empty {
+      <p style="text-align:center; color:#999; padding:2rem 0;">Sin registros de asistencia.</p>
+    }
+  </section>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active">
+      <i class="fa-solid fa-star"></i>
+      <span>Historial</span>
+    </button>
+    <button class="nav-item" (click)="navigateTo('home')">
+      <i class="fa-solid fa-house"></i>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item" (click)="navigateTo('documentos')">
+      <i class="fa-regular fa-folder-open"></i>
+      <span>Documentos</span>
+    </button>
+  </nav>
+</main>

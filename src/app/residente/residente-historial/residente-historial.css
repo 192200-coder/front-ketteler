@@ -1,0 +1,127 @@
+.mobile-container {
+  width: 100%;
+  max-width: 400px;
+  height: 100vh;
+  max-height: 850px;
+  background-color: #ffffff;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.header-nav { margin-bottom: 1rem; }
+.btn-back {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111;
+  text-align: left;
+  margin-bottom: 2rem;
+  padding-left: 0.5rem;
+}
+
+/* Contenedor de la lista con scroll */
+.history-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Fila de historial */
+.history-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid #f2f2f2;
+  transition: background-color 0.2s;
+}
+
+.status-indicator {
+  margin-right: 1rem;
+}
+
+.check-icon {
+  color: #2ecc71; /* Verde éxito */
+  font-size: 1.8rem;
+}
+
+.history-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.history-date {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.history-time {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 2px;
+}
+
+/* Badge de estado (Completo) */
+.status-badge {
+  background-color: #e8f8f5;
+  color: #27ae60;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #d1f2eb;
+}
+
+/* Footer de Navegación */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #f3ecf7;
+  display: flex;
+  border-top: 1px solid #e1d5eb;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.nav-item {
+  flex: 1;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  color: #7d6693;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.nav-item i { font-size: 1.2rem; }
+.nav-item.active { color: #2c42a5; }
+
+@media (max-width: 480px) {
+  .mobile-container { height: 100vh; border-radius: 0; }
+  .bottom-nav { border-radius: 0; }
+}

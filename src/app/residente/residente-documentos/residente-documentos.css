@@ -1,0 +1,171 @@
+.mobile-container {
+  width: 100%;
+  max-width: 400px;
+  height: 100vh;
+  max-height: 850px;
+  background-color: #ffffff;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.header-nav { margin-bottom: 1rem; }
+.btn-back {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Contenedor Verde de Pestañas (Fiel al mockup) */
+.tabs-container {
+  display: flex;
+  background-color: #d4efdf; /* Verde claro */
+  padding: 0.3rem;
+  border-radius: 25px;
+  margin-bottom: 1.5rem;
+}
+.tab-item {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #27ae60;
+  cursor: pointer;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.tab-item.active {
+  background-color: #ffffff;
+  color: #196f3d;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Área con scroll para las tarjetas de documentos */
+.upload-scroll-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+/* Tarjetas de Documentos */
+.document-card {
+  border: 1px solid #f0e6f7;
+  border-radius: 15px;
+  padding: 1.2rem;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.01);
+}
+.doc-title { font-size: 1rem; font-weight: 700; color: #333; margin-bottom: 0.3rem; }
+.doc-subtitle { font-size: 0.75rem; color: #999; margin-bottom: 1rem; }
+
+/* Caja de arrastre/toque */
+.drop-zone {
+  border: 1px dashed #dcd6f7;
+  background-color: #fcf8ff; /* Tono lila claro del mockup */
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 1rem;
+}
+.drop-zone:hover { background-color: #f3ebff; }
+.doc-icon { font-size: 2rem; color: #4a2768; margin-bottom: 0.5rem; }
+.drop-text { font-size: 0.85rem; color: #a569bd; font-weight: 600; }
+
+/* Botón Subir Morado */
+.btn-upload-doc {
+  width: 100%;
+  background-color: #7d3c98; /* Morado del mockup */
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.btn-upload-doc:disabled { background-color: #e5e7e9; color: #bdc3c7; cursor: not-allowed; }
+
+/* Footer de Navegación */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #f3ecf7;
+  display: flex;
+  border-top: 1px solid #e1d5eb;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.nav-item {
+  flex: 1;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  color: #7d6693;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.nav-item i { font-size: 1.2rem; }
+.nav-item.active { color: #2c42a5; }
+
+@media (max-width: 480px) {
+  .mobile-container { height: 100vh; border-radius: 0; }
+  .bottom-nav { border-radius: 0; }
+}
+
+.login-error {
+  color: #d32f2f;
+  background-color: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.badge-status {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.badge-pendiente  { background-color: #fef9c3; color: #92400e; }
+.badge-aprobado   { background-color: #d1fae5; color: #065f46; }
+.badge-rechazado  { background-color: #fee2e2; color: #991b1b; }
+.badge-observado  { background-color: #dbeafe; color: #1e40af; }

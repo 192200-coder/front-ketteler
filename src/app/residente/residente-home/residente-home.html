@@ -1,0 +1,141 @@
+<main class="mobile-container">
+  <header class="header-actions">
+    <span class="brand-small">Casa Ketteler</span>
+    <button class="btn-logout" (click)="logout()">
+      Cerrar sesión <i class="fa-solid fa-arrow-right-from-bracket"></i>
+    </button>
+  </header>
+
+  <section class="welcome-section">
+    <h1 class="welcome-title">Welcome, {{ authService.currentUser()?.firstName }}</h1>
+    <p class="welcome-subtitle">Registra tu asistencia y consulta tu historial</p>
+  </section>
+
+  @if (mensajeRed()) {
+    <p class="login-error">{{ mensajeRed() }}</p>
+  }
+
+  <div class="wifi-badge" [class.connected]="isCorrectWifi()" [class.disconnected]="!isCorrectWifi()">
+    <i
+      class="fa-solid"
+      [class.fa-wifi]="isCorrectWifi()"
+      [class.fa-triangle-exclamation]="!isCorrectWifi()"
+    ></i>
+    <span>{{
+      isCorrectWifi()
+        ? 'Conectado a Wi-Fi: CASA KETTELER'
+        : 'Red inválida: Conéctate a la red oficial'
+    }}</span>
+  </div>
+
+  @if (mensajeRegistro()) {
+    <p class="login-error">{{ mensajeRegistro() }}</p>
+  }
+
+  @if (permisoCamaraDenegado()) {
+    <button
+      class="btn-secondary"
+      (click)="abrirAjustesCamara()"
+      style="margin-bottom: 0.5rem; font-size: 0.8rem"
+    >
+      ⚙️ Abrir ajustes y activar permiso de cámara
+    </button>
+  }
+
+  <section class="main-card">
+    <div
+      class="camera-box"
+      (click)="startFacialScan()"
+      [class.scanning]="isScanning"
+      [class.verified]="isFaceVerified"
+    >
+      <video
+        #videoPreview
+        autoplay
+        playsinline
+        muted
+        [style.display]="isScanning ? 'block' : 'none'"
+        style="
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: inherit;
+          transform: scaleX(-1);
+        "
+      ></video>
+
+      @if (fotoPreviewUrl() && isFaceVerified) {
+        <img [src]="fotoPreviewUrl()" class="camera-feed visible" alt="Foto capturada" />
+      }
+
+      @if (!isScanning && !isFaceVerified) {
+        <i class="fa-solid fa-camera camera-icon"></i>
+        <p class="camera-text">Toca para validación facial</p>
+      }
+
+      @if (isScanning) {
+        <div class="scanner-line"></div>
+        @if (cuentaRegresiva()) {
+          <p class="camera-countdown">{{ cuentaRegresiva() }}</p>
+        }
+        <p class="camera-text scanning-label">Escaneando rostro...</p>
+      }
+
+      @if (isFaceVerified) {
+        <i class="fa-solid fa-circle-check camera-icon success-icon"></i>
+        <p class="camera-text status-ok">Rostro capturado, listo para registrar</p>
+      }
+    </div>
+
+    <div class="input-group">
+      <select id="motivoSalida" [(ngModel)]="selectedMotive" class="select-motive">
+        <option value="" disabled selected>Ingresa el motivo de salida</option>
+        <option value="clases">Asistencia a Clases Universitarias</option>
+        <option value="medico">Cita Médica / Salud</option>
+        <option value="trabajo">Jornada Laboral / Prácticas</option>
+        <option value="otros">Otros (Requiere autorización)</option>
+      </select>
+    </div>
+
+    <button
+      class="btn-register"
+      [disabled]="!isCorrectWifi() || !isFaceVerified || !selectedMotive"
+      (click)="registerExit()"
+    >
+      {{ proximaAccion() === 'entrada' ? 'Registrar entrada' : 'Registrar salida' }}
+    </button>
+  </section>
+
+  <section class="today-logs">
+    <h3 class="logs-title">Registro de hoy</h3>
+    <div class="logs-row">
+      <div class="log-box status-out">
+        <span class="log-label"><i class="fa-solid fa-person-walking-arrow-right"></i> Salida</span>
+        <span class="log-time">{{ exitTime }}</span>
+      </div>
+      <div class="log-box status-in">
+        <span class="log-label"
+          ><i class="fa-solid fa-person-walking-arrow-loop-left"></i> Entrada</span
+        >
+        <span class="log-time">{{ entryTime }}</span>
+      </div>
+    </div>
+  </section>
+
+  <nav class="bottom-nav">
+    <button class="nav-item" (click)="navigateTo('historial')">
+      <i class="fa-regular fa-star"></i>
+      <span>Historial</span>
+    </button>
+    <button class="nav-item active">
+      <i class="fa-solid fa-house"></i>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item" (click)="navigateTo('documentos')">
+      <i class="fa-regular fa-folder-open"></i>
+      <span>Documentos</span>
+    </button>
+  </nav>
+</main>

@@ -1,0 +1,40 @@
+<main class="mobile-container">
+  <header class="login-header">
+    <span class="top-title">LOGIN RESIDENTE</span>
+  </header>
+
+  <section class="brand-section">
+    <div class="avatar-container">
+      <img src="https://via.placeholder.com/100" alt="Retrato Casa Ketteler" class="avatar">
+    </div>
+    <h1 class="brand-title">Casa Ketteler</h1>
+  </section>
+
+  <form (submit)="onLogin($event)" class="login-form">
+    <div class="input-group">
+      <label for="username">Usuario</label>
+      <div class="input-wrapper">
+        <i class="fa-regular fa-user icon-left"></i>
+        <input type="email" id="username" name="username" placeholder="Ingresa tu usuario" [(ngModel)]="email" required>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="password">Contraseña</label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-lock icon-left"></i>
+        <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" placeholder="•••••••••••••" [(ngModel)]="password" required>
+        <i class="fa-regular icon-right" 
+           [class.fa-eye-slash]="!showPassword" 
+           [class.fa-eye]="showPassword" 
+           (click)="togglePasswordVisibility()"></i>
+      </div>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="login-error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" class="btn-primary">{{ buttonText }}</button>
+  </form>
+</main>

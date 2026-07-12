@@ -1,0 +1,161 @@
+<div class="admin-container">
+  <div class="header">
+    <div class="title-section">
+      <h2>Documentos del residente</h2>
+      <p>Revisa, aprueba o rechaza los documentos subidos</p>
+    </div>
+    <button class="btn-back" (click)="volver()">&lt; Volver</button>
+  </div>
+
+  @if (mensaje()) {
+    <p class="login-error">{{ mensaje() }}</p>
+  }
+
+  <div class="table-card" style="padding: 1rem">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h3>Documentos generales</h3>
+      <button class="btn-action" (click)="toggleFormSubida()">
+        {{ mostrarFormSubida() ? 'Cancelar' : '+ Subir documento' }}
+      </button>
+    </div>
+
+    @if (mostrarFormSubida()) {
+      <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem; padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+        <select [(ngModel)]="tipoDocumento" class="custom-input">
+          <option value="" disabled selected>Selecciona el tipo</option>
+          <option value="DNI">DNI</option>
+          <option value="FICHA">Ficha de inscripción</option>
+          <option value="CONTRATO">Contrato</option>
+          <option value="PAGO">Constancia de pago</option>
+          <option value="NOTAS">Constancia de notas</option>
+          <option value="OTRO">Otro</option>
+        </select>
+
+        <div style="border: 1px dashed #ccc; border-radius: 8px; padding: 1rem; text-align: center; cursor: pointer;" (click)="fileInputAdmin.click()">
+          <i class="fa-regular fa-file-lines" style="font-size: 1.5rem; color: #7d3c98"></i>
+          <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem">
+            {{ archivoNombre || 'Toca para seleccionar archivo' }}
+          </p>
+          <input #fileInputAdmin type="file" hidden (change)="onArchivoSeleccionado($event)" />
+        </div>
+
+        <button class="btn-action" [disabled]="!tipoDocumento || !archivoSeleccionado" (click)="subirDocumentoAdmin()">
+          Subir documento
+        </button>
+      </div>
+    }
+
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Archivo</th>
+          <th>Estado</th>
+          <th>Observación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (documentosGenerales().length === 0) {
+          <tr>
+            <td colspan="5">Sin documentos generales.</td>
+          </tr>
+        }
+        @for (doc of documentosGenerales(); track doc.idDocumentGeneral) {
+          <tr>
+            <td>{{ doc.type }}</td>
+            <td>{{ doc.nameDocumentGeneral }}</td>
+            <td>
+              <span class="badge badge-rol">{{ doc.status }}</span>
+            </td>
+            <td>{{ doc.observations || '—' }}</td>
+            <td class="actions">
+              <button class="icon-btn" title="Descargar" (click)="descargarGeneral(doc.idDocumentGeneral)">⬇️</button>
+              <button class="icon-btn" title="Aprobar" (click)="actualizarEstadoGeneral(doc.idDocumentGeneral, 'APROBADO')">✅</button>
+              <button class="icon-btn" title="Agregar observación" (click)="iniciarObservacion(doc.idDocumentGeneral)">✏️</button>
+              <button class="icon-btn delete" title="Rechazar" (click)="actualizarEstadoGeneral(doc.idDocumentGeneral, 'RECHAZADO')">❌</button>
+            </td>
+          </tr>
+          @if (observacionEditando() === doc.idDocumentGeneral) {
+            <tr>
+              <td colspan="5">
+                <div style="display: flex; gap: 0.5rem; padding: 0.5rem 0">
+                  <input type="text" [(ngModel)]="observacionTexto" placeholder="Escribe la observación..." class="custom-input" style="flex: 1" />
+                  <button class="btn-action" (click)="confirmarObservacionGeneral(doc.idDocumentGeneral)">Guardar</button>
+                  <button class="btn-secondary" (click)="cancelarObservacion()">Cancelar</button>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1rem 0;">
+      <h3>Carta de renuncia</h3>
+      @if (!documentoRenuncia()) {
+        <button class="btn-action" (click)="toggleFormRenuncia()">
+          {{ mostrarFormRenuncia() ? 'Cancelar' : '+ Asignar formato' }}
+        </button>
+      }
+    </div>
+
+    @if (mostrarFormRenuncia()) {
+      <div style="padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem;">
+        <div style="border: 1px dashed #ccc; border-radius: 8px; padding: 1rem; text-align: center; cursor: pointer;" (click)="fileInputRenuncia.click()">
+          <i class="fa-regular fa-file-lines" style="font-size: 1.5rem; color: #7d3c98;"></i>
+          <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+            {{ archivoRenunciaNombre || 'Toca para seleccionar formato' }}
+          </p>
+          <input #fileInputRenuncia type="file" hidden (change)="onArchivoRenunciaSeleccionado($event)" />
+        </div>
+        <button class="btn-action" [disabled]="!archivoRenuncia" (click)="subirFormatoRenuncia()">
+          Asignar formato al residente
+        </button>
+      </div>
+    }
+
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Estado</th>
+          <th>Observación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (!documentoRenuncia()) {
+          <tr>
+            <td colspan="3">No ha enviado carta de renuncia.</td>
+          </tr>
+        } @else {
+          <tr>
+            <td>
+              <span class="badge badge-rol">{{ documentoRenuncia()!.status }}</span>
+            </td>
+            <td>{{ documentoRenuncia()!.observations || '—' }}</td>
+            <td class="actions">
+              <button class="icon-btn" title="Descargar" (click)="descargarRenuncia(documentoRenuncia()!.idDocumentResignation)">⬇️</button>
+              <button class="icon-btn" title="Aprobar" (click)="actualizarEstadoRenuncia(documentoRenuncia()!.idDocumentResignation, 'APROBADO')">✅</button>
+              <button class="icon-btn" title="Agregar observación" (click)="iniciarObservacion(documentoRenuncia()!.idDocumentResignation)">✏️</button>
+              <button class="icon-btn delete" title="Rechazar" (click)="actualizarEstadoRenuncia(documentoRenuncia()!.idDocumentResignation, 'RECHAZADO')">❌</button>
+            </td>
+          </tr>
+          @if (observacionEditando() === documentoRenuncia()!.idDocumentResignation) {
+            <tr>
+              <td colspan="3">
+                <div style="display: flex; gap: 0.5rem; padding: 0.5rem 0">
+                  <input type="text" [(ngModel)]="observacionTexto" placeholder="Escribe la observación..." class="custom-input" style="flex: 1" />
+                  <button class="btn-action" (click)="confirmarObservacionRenuncia(documentoRenuncia()!.idDocumentResignation)">Guardar</button>
+                  <button class="btn-secondary" (click)="cancelarObservacion()">Cancelar</button>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

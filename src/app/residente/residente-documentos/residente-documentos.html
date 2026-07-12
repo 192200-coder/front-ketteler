@@ -1,0 +1,124 @@
+<main class="mobile-container">
+  <header class="header-nav">
+    <button class="btn-back" (click)="goBack()">
+      <i class="fa-solid fa-chevron-left"></i> Atrás
+    </button>
+  </header>
+
+  <h1 class="page-title">Carga tus documentos</h1>
+
+  <div class="tabs-container">
+    <button class="tab-item" [class.active]="activeTab() === 'misdocs'" (click)="setTab('misdocs')">
+      Mis docs
+    </button>
+    <button class="tab-item" [class.active]="activeTab() === 'subir'" (click)="setTab('subir')">
+      <i class="fa-regular fa-star"></i> Subir
+    </button>
+    <button class="tab-item" [class.active]="activeTab() === 'renuncia'" (click)="setTab('renuncia')">
+      Renuncia
+    </button>
+  </div>
+
+  @if (mensaje()) {
+    <p class="login-error">{{ mensaje() }}</p>
+  }
+
+  <section class="upload-scroll-area">
+    @if (activeTab() === 'subir') {
+      <div class="document-card">
+        <h3 class="doc-title">Constancia de pago</h3>
+        <p class="doc-subtitle">Una vez por mes - PDF, JPG o PNG (máx. 10 MB)</p>
+        <div class="drop-zone" (click)="triggerFileInput('filePago')">
+          <i class="fa-regular fa-file-lines doc-icon"></i>
+          <p class="drop-text">{{ filePagoName || 'Toca para seleccionar' }}</p>
+          <input type="file" id="filePago" hidden (change)="onFileSelected($event, 'pago')" />
+        </div>
+        <button class="btn-upload-doc" [disabled]="!filePagoName" (click)="uploadDocument('pago')">
+          Subir constancia de pago
+        </button>
+      </div>
+
+      <div class="document-card">
+        <h3 class="doc-title">Constancia de notas</h3>
+        <p class="doc-subtitle">Una vez por semestre - PDF, JPG o PNG (máx. 10 MB)</p>
+        <div class="drop-zone" (click)="triggerFileInput('fileNotas')">
+          <i class="fa-regular fa-file-lines doc-icon"></i>
+          <p class="drop-text">{{ fileNotasName || 'Toca para seleccionar' }}</p>
+          <input type="file" id="fileNotas" hidden (change)="onFileSelected($event, 'notas')" />
+        </div>
+        <button class="btn-upload-doc" [disabled]="!fileNotasName" (click)="uploadDocument('notas')">
+          Subir constancia de notas
+        </button>
+      </div>
+    }
+
+    @if (activeTab() === 'renuncia') {
+      <div class="document-card">
+        <h3 class="doc-title">Carta de renuncia</h3>
+        <p class="doc-subtitle">PDF, JPG o PNG (máx. 10 MB)</p>
+
+        @if (miRenuncia()) {
+          <p class="doc-subtitle">
+            Estado:
+            <span [class]="badgeClass(miRenuncia()!.status)">{{ miRenuncia()!.status }}</span>
+          </p>
+        }
+
+        @if (miRenuncia() && miRenuncia()!.status === 'PENDIENTE') {
+          <button class="btn-upload-doc" style="margin-bottom:1rem; background:#196f3d;" (click)="descargarFormatoRenuncia()">
+            <i class="fa-solid fa-download"></i> Descargar formato asignado
+          </button>
+        }
+
+        <div class="drop-zone" (click)="triggerFileInput('fileRenuncia')">
+          <i class="fa-regular fa-file-lines doc-icon"></i>
+          <p class="drop-text">{{ fileRenunciaName || 'Toca para seleccionar' }}</p>
+          <input type="file" id="fileRenuncia" hidden (change)="onFileSelected($event, 'renuncia')" />
+        </div>
+        <button class="btn-upload-doc" [disabled]="!fileRenunciaName" (click)="uploadRenuncia()">
+          Enviar carta de renuncia
+        </button>
+      </div>
+    }
+
+    @if (activeTab() === 'misdocs') {
+      @if (loadingDocs()) {
+        <p class="drop-text">Cargando documentos...</p>
+      } @else if (misDocumentos().length === 0) {
+        <p class="drop-text">Todavía no has subido documentos.</p>
+      } @else {
+        @for (doc of misDocumentos(); track doc.idDocumentGeneral) {
+          <div class="document-card">
+            <h3 class="doc-title">{{ doc.type }}</h3>
+            <p class="doc-subtitle">
+              Estado: <span [class]="badgeClass(doc.status)">{{ doc.status }}</span>
+            </p>
+            @if (doc.observations) {
+              <p class="doc-subtitle">Observación: {{ doc.observations }}</p>
+            }
+            @if (doc.downloadable) {
+              <button class="btn-upload-doc" (click)="descargarDocumento(doc.idDocumentGeneral!)">
+                <i class="fa-solid fa-download"></i> Descargar documento
+              </button>
+            }
+          </div>
+        }
+      }
+    }
+  </section>
+
+  <nav class="bottom-nav">
+    <button class="nav-item" (click)="navigateTo('historial')">
+      <i class="fa-regular fa-star"></i>
+      <span>Historial</span>
+    </button>
+    <button class="nav-item" (click)="navigateTo('home')">
+      <i class="fa-solid fa-house"></i>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item active">
+      <i class="fa-regular fa-folder-open"></i>
+      <span>Documentos</span>
+    </button>
+  </nav>
+</main>
