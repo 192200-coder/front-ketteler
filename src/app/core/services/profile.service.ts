@@ -10,6 +10,7 @@ export interface PerfilUsuario {
   surName?: string;
   email?: string;
   idResidence?: string;
+  presente?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })

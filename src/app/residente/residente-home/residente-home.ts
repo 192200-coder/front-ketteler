@@ -19,11 +19,6 @@ interface FaceVerificationResponse {
   entrada: boolean | null;
 }
 
-interface RegistroAsistencia {
-  entryDate: string | null;
-  departureDate: string | null;
-  status: boolean;
-}
 
 @Component({
   selector: 'app-residente-home',
@@ -83,21 +78,13 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
   }
 
   private cargarProximaAccion() {
-    this.http
-      .get<{ data: { content: RegistroAsistencia[] } }>(`${API_BASE_URL}/myattendance/filter`, {
-        params: { page: 0, size: 1 },
-      })
-      .subscribe({
-        next: (res) => {
-          const ultimo = res.data?.content?.[0];
-          if (!ultimo || ultimo.status === false) {
-            this.proximaAccion.set('entrada');
-          } else {
-            this.proximaAccion.set('salida');
-          }
-        },
-        error: () => {},
-      });
+    // En el modelo de eventos, la próxima acción la determina el estado
+    // de presencia del residente (flag 'presente'), no el historial.
+    const perfil = this.profileService.perfil();
+    const presente = perfil?.presente;
+    // Si está presente (dentro) → su próxima marca será salida.
+    // Si está ausente (fuera) → su próxima marca será entrada.
+    this.proximaAccion.set(presente ? 'salida' : 'entrada');
   }
 
   private async verificarRed() {

@@ -4,10 +4,11 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from '../../core/config/api.config';
 
-interface RegistroAsistencia {
-  entryDate: string | null;
-  departureDate: string | null;
-  status: boolean;
+interface EventoAsistencia {
+  eventTimestamp: string | null;
+  eventType: 'ENTRADA' | 'SALIDA' | 'INTENTO_FALLIDO';
+  esAnomalia: boolean;
+  motivoFallo: string | null;
 }
 
 @Component({
@@ -19,7 +20,7 @@ interface RegistroAsistencia {
   styleUrls: ['./residente-historial.css']
 })
 export class ResidenteHistorialComponent implements OnInit {
-  asistencias = signal<{ fecha: string; entrada: string; salida: string; estado: string }[]>([]);
+  eventos = signal<{ fecha: string; hora: string; tipo: string; esAnomalia: boolean; motivo: string | null }[]>([]);
   cargando = signal(true);
 
   constructor(private router: Router, private http: HttpClient, private datePipe: DatePipe) {}
@@ -29,21 +30,31 @@ export class ResidenteHistorialComponent implements OnInit {
   }
 
   private cargarHistorial() {
-    this.http.get<{ data: { content: RegistroAsistencia[] } }>(`${API_BASE_URL}/myattendance/filter`, {
+    this.http.get<{ data: { content: EventoAsistencia[] } }>(`${API_BASE_URL}/myattendance/filter`, {
       params: { page: 0, size: 30 }
     }).subscribe({
       next: (res) => {
         const contenido = res.data?.content ?? [];
-        this.asistencias.set(contenido.map(r => ({
-          fecha: this.datePipe.transform(r.entryDate, 'dd/MM/yyyy') ?? '-',
-          entrada: this.datePipe.transform(r.entryDate, 'hh:mm a') ?? '-',
-          salida: r.departureDate ? (this.datePipe.transform(r.departureDate, 'hh:mm a') ?? '-') : '-',
-          estado: r.status ? 'Dentro' : 'Completo'
+        this.eventos.set(contenido.map(e => ({
+          fecha: this.datePipe.transform(e.eventTimestamp, 'dd/MM/yyyy') ?? '-',
+          hora: this.datePipe.transform(e.eventTimestamp, 'hh:mm a') ?? '-',
+          tipo: this.etiquetaTipo(e.eventType),
+          esAnomalia: e.esAnomalia,
+          motivo: e.motivoFallo,
         })));
         this.cargando.set(false);
       },
       error: () => this.cargando.set(false)
     });
+  }
+
+  private etiquetaTipo(tipo: string): string {
+    switch (tipo) {
+      case 'ENTRADA': return 'Entrada';
+      case 'SALIDA': return 'Salida';
+      case 'INTENTO_FALLIDO': return 'Intento fallido';
+      default: return tipo;
+    }
   }
 
   goBack() {

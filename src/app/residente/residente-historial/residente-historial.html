@@ -8,19 +8,35 @@
   <h1 class="page-title">Historial de asistencia</h1>
 
   <section class="history-list">
-    @for (registro of asistencias(); track registro.fecha) {
+    @for (ev of eventos(); track $index) {
       <div class="history-item">
         <div class="status-indicator">
-          <i class="fa-solid fa-circle-check check-icon"></i>
+          @if (ev.tipo === 'Intento fallido') {
+            <i class="fa-solid fa-circle-xmark" style="color: #d93025; font-size: 1.8rem"></i>
+          } @else {
+            <i class="fa-solid fa-circle-check check-icon"></i>
+          }
         </div>
         <div class="history-details">
-          <span class="history-date">{{ registro.fecha }}</span>
-          <span class="history-time">{{ registro.entrada }} - {{ registro.salida }}</span>
+          <span class="history-date">{{ ev.tipo }} — {{ ev.fecha }}</span>
+          <span class="history-time">
+            {{ ev.hora }}
+            @if (ev.motivo) {
+              · {{ ev.motivo }}
+            }
+          </span>
         </div>
-        <div class="status-badge">{{ registro.estado }}</div>
+        @if (ev.esAnomalia) {
+          <div
+            class="status-badge"
+            style="background: #fce8e6; color: #d93025; border-color: #f5c6cb"
+          >
+            Anomalía
+          </div>
+        }
       </div>
     } @empty {
-      <p style="text-align:center; color:#999; padding:2rem 0;">Sin registros de asistencia.</p>
+      <p style="text-align: center; color: #999; padding: 2rem 0">Sin registros de asistencia.</p>
     }
   </section>
 
