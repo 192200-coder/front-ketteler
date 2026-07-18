@@ -14,7 +14,7 @@
   <div class="table-card">
     <div class="search-bar">
       <span>🔍</span>
-      <input type="text" placeholder="Buscar por nombre o usuario">
+      <input type="text" placeholder="Buscar por nombre o usuario" />
     </div>
 
     <table class="custom-table">
@@ -29,25 +29,60 @@
       </thead>
       <tbody>
         @if (cargando()) {
-          <tr><td colspan="5">Cargando usuarios...</td></tr>
+          <tr>
+            <td colspan="5">Cargando usuarios...</td>
+          </tr>
         } @else {
           @for (user of usuarios(); track user.idUser) {
             <tr>
               <td>{{ user.firstName }} {{ user.surName }}</td>
               <td>{{ user.email }}</td>
-              <td><span class="badge badge-rol">{{ user.role }}</span></td>
+              <td>
+                <span class="badge badge-rol">{{ user.role }}</span>
+              </td>
               <td>
                 <span class="badge" [ngClass]="user.active ? 'badge-activo' : 'badge-inactivo'">
                   {{ user.active ? 'Activo' : 'Inactivo' }}
                 </span>
               </td>
               <td class="actions">
-                <button class="icon-btn edit" title="Editar" (click)="editarUsuario(user.idUser)">📝</button>
-                <button class="icon-btn delete" title="Eliminar" (click)="eliminarUsuario(user.idUser)">🗑️</button>
-                <button class="icon-btn" title="Restablecer contraseña" (click)="resetearPassword(user.idUser)">🔑</button>
-                <button class="icon-btn" title="Ver documentos" (click)="verDocumentos(user.idUser)">📄</button>
-                <button class="icon-btn" title="Subir documento de entrada" onclick="this.nextElementSibling.click()">📥</button>
-                <input type="file" hidden (change)="subirDocumentoEntrada(user.idUser, $event)">
+                <button class="icon-btn edit" title="Editar" (click)="editarUsuario(user.idUser)">
+                  📝
+                </button>
+                <button
+                  class="icon-btn delete"
+                  title="Eliminar"
+                  (click)="eliminarUsuario(user.idUser)"
+                >
+                  🗑️
+                </button>
+                <button
+                  class="icon-btn"
+                  title="Restablecer contraseña"
+                  (click)="resetearPassword(user.idUser, user.firstName + ' ' + user.surName)"
+                >
+                  🔑
+                </button>
+                <button
+                  class="icon-btn"
+                  title="Ver documentos"
+                  (click)="verDocumentos(user.idUser)"
+                >
+                  📄
+                </button>
+                <button
+                  class="icon-btn"
+                  title="Subir documento de entrada"
+                  (click)="fileInputEntrada.click()"
+                >
+                  📥
+                </button>
+                <input
+                  #fileInputEntrada
+                  type="file"
+                  hidden
+                  (change)="subirDocumentoEntrada(user.idUser, $event)"
+                />
               </td>
             </tr>
           }
@@ -57,6 +92,72 @@
   </div>
 
   <div class="footer-actions">
-    <button class="btn-back" routerLink="/admin-home"> &lt; Atrás </button>
+    <button class="btn-back" routerLink="/admin-home">&lt; Atrás</button>
   </div>
+  @if (passwordReseteada()) {
+    <div
+      style="
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      "
+      (click)="cerrarModalPassword()"
+    >
+      <div
+        style="
+          background: white;
+          border-radius: 12px;
+          padding: 2rem;
+          max-width: 420px;
+          width: 90%;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        "
+        (click)="$event.stopPropagation()"
+      >
+        <h3 style="margin-top: 0">Contraseña restablecida</h3>
+        <p style="color: #6c757d; font-size: 0.9rem">
+          Entrega esta nueva contraseña temporal a <strong>{{ usuarioReseteado() }}</strong>
+          (también se envió a su correo).
+        </p>
+
+        <div
+          style="
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+          "
+        >
+          <p
+            style="
+              font-size: 1.3rem;
+              font-weight: 700;
+              margin: 0;
+              font-family: monospace;
+              letter-spacing: 1px;
+            "
+          >
+            {{ passwordReseteada() }}
+          </p>
+        </div>
+
+        <p style="font-size: 0.8rem; color: #d93025; margin-bottom: 1.5rem">
+          ⚠️ Esta contraseña no se volverá a mostrar. Cópiala o anótala ahora.
+        </p>
+
+        <div style="display: flex; gap: 0.8rem; justify-content: flex-end">
+          <button class="btn-secondary" (click)="copiarPasswordReseteada()">
+            {{ copiado() ? '✓ Copiado' : 'Copiar' }}
+          </button>
+          <button class="btn-primary" (click)="cerrarModalPassword()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

@@ -92,4 +92,8 @@ export class AdminHomeComponent implements OnInit {
   logout() {
     this.authService.logout();
   }
+
+  irACambiarContrasena() {
+    this.router.navigate(['/admin-cambiar-contrasena']);
+  }
 }

@@ -5,11 +5,14 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from '../../core/config/api.config';
 import { FormsModule } from '@angular/forms';
+import { DescargaService } from '../../core/services/descarga.service';
+import { esExitoso, primerMensaje } from '../../core/utils/storage.util';
 
 interface DocumentoGeneral {
   idDocumentGeneral: string;
   type: string;
   nameDocumentGeneral: string;
+  extensionDocumentGeneral: string;
   status: string;
   observations?: string;
 }
@@ -17,6 +20,14 @@ interface DocumentoGeneral {
 interface DocumentoRenuncia {
   idDocumentResignation: string;
   nameDocumentResignation?: string;
+  status: string;
+  observations?: string;
+}
+
+interface DocumentoEntrada {
+  idDocumentEnter: string;
+  nameDocumentEnter: string;
+  extensionDocumentEnter: string;
   status: string;
   observations?: string;
 }
@@ -38,13 +49,14 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
   cargando = signal(false);
   mensaje = signal<string | null>(null);
 
-  observacionEditando = signal<string | null>(null); // id del doc en edición
+  observacionEditando = signal<string | null>(null);
   observacionTexto = '';
   mostrarFormSubida = signal(false);
   tipoDocumento = '';
   archivoSeleccionado: File | null = null;
   archivoNombre = '';
 
+  documentosEntrada = signal<DocumentoEntrada[]>([]);
   mostrarFormRenuncia = signal(false);
   archivoRenuncia: File | null = null;
   archivoRenunciaNombre = '';
@@ -53,6 +65,7 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
+    private descargaService: DescargaService,
   ) {}
 
   ngOnInit() {
@@ -66,6 +79,12 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
       .get<{ data: DocumentoGeneral[] }>(`${API_BASE_URL}/documents/${this.idUser}`)
       .subscribe({
         next: (res) => this.documentosGenerales.set(res.data ?? []),
+        error: () => {},
+      });
+    this.http
+      .get<{ data: DocumentoEntrada[] }>(`${API_BASE_URL}/documententer/${this.idUser}`)
+      .subscribe({
+        next: (res) => this.documentosEntrada.set(res.data ?? []),
         error: () => {},
       });
     this.http
@@ -85,7 +104,11 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
         params: { status, observations: '' },
       })
       .subscribe({
-        next: () => {
+        next: (res: any) => {
+          if (!esExitoso(res)) {
+            this.mensaje.set(primerMensaje(res, 'No se pudo actualizar el documento.'));
+            return;
+          }
           this.mensaje.set('Documento actualizado.');
           this.cargarDocumentos();
         },
@@ -99,7 +122,11 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
         params: { status, observations: '' },
       })
       .subscribe({
-        next: () => {
+        next: (res: any) => {
+          if (!esExitoso(res)) {
+            this.mensaje.set(primerMensaje(res, 'No se pudo actualizar la renuncia.'));
+            return;
+          }
           this.mensaje.set('Renuncia actualizada.');
           this.cargarDocumentos();
         },
@@ -107,12 +134,22 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
       });
   }
 
-  descargarGeneral(idDocument: string) {
-    window.open(`${API_BASE_URL}/documents/download/${idDocument}`, '_blank');
+  descargarGeneral(doc: DocumentoGeneral) {
+    this.descargaService.descargar(
+      `${API_BASE_URL}/documents/download/${doc.idDocumentGeneral}`,
+      `${doc.nameDocumentGeneral}.${doc.extensionDocumentGeneral}`,
+      (msg) => this.mensaje.set(msg),
+      'No se pudo descargar el documento.',
+    );
   }
 
   descargarRenuncia(idDocument: string) {
-    window.open(`${API_BASE_URL}/resignation/download/${idDocument}`, '_blank');
+    this.descargaService.descargar(
+      `${API_BASE_URL}/resignation/download/${idDocument}`,
+      `renuncia-${idDocument}`,
+      (msg) => this.mensaje.set(msg),
+      'No se pudo descargar la renuncia.',
+    );
   }
 
   volver() {
@@ -135,7 +172,11 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
         params: { status: 'OBSERVADO', observations: this.observacionTexto },
       })
       .subscribe({
-        next: () => {
+        next: (res: any) => {
+          if (!esExitoso(res)) {
+            this.mensaje.set(primerMensaje(res, 'No se pudo guardar la observación.'));
+            return;
+          }
           this.mensaje.set('Observación guardada.');
           this.cancelarObservacion();
           this.cargarDocumentos();
@@ -150,7 +191,11 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
         params: { status: 'OBSERVADO', observations: this.observacionTexto },
       })
       .subscribe({
-        next: () => {
+        next: (res: any) => {
+          if (!esExitoso(res)) {
+            this.mensaje.set(primerMensaje(res, 'No se pudo guardar la observación.'));
+            return;
+          }
           this.mensaje.set('Observación guardada.');
           this.cancelarObservacion();
           this.cargarDocumentos();
@@ -197,7 +242,11 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
     formData.append('file', this.archivoSeleccionado);
 
     this.http.post(`${API_BASE_URL}/registerdocumentgeneral`, formData).subscribe({
-      next: () => {
+      next: (res: any) => {
+        if (!esExitoso(res)) {
+          this.mensaje.set(primerMensaje(res, 'No se pudo subir el documento.'));
+          return;
+        }
         this.mensaje.set('Documento subido correctamente.');
         this.toggleFormSubida();
         this.cargarDocumentos();
@@ -242,12 +291,62 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
     formData.append('file', this.archivoRenuncia);
 
     this.http.post(`${API_BASE_URL}/assignresignation`, formData).subscribe({
-      next: () => {
+      next: (res: any) => {
+        if (!esExitoso(res)) {
+          this.mensaje.set(primerMensaje(res, 'No se pudo asignar el formato.'));
+          return;
+        }
         this.mensaje.set('Formato de renuncia asignado al residente.');
         this.toggleFormRenuncia();
         this.cargarDocumentos();
       },
       error: () => this.mensaje.set('No se pudo asignar el formato.'),
     });
+  }
+
+  actualizarEstadoEntrada(idDocument: string, status: 'APROBADO' | 'RECHAZADO') {
+    this.http
+      .patch(`${API_BASE_URL}/documententer/${idDocument}/status`, null, {
+        params: { status, observations: '' },
+      })
+      .subscribe({
+        next: (res: any) => {
+          if (!esExitoso(res)) {
+            this.mensaje.set(primerMensaje(res, 'No se pudo actualizar el documento.'));
+            return;
+          }
+          this.mensaje.set('Documento actualizado.');
+          this.cargarDocumentos();
+        },
+        error: () => this.mensaje.set('No se pudo actualizar el documento.'),
+      });
+  }
+
+  confirmarObservacionEntrada(idDocument: string) {
+    this.http
+      .patch(`${API_BASE_URL}/documententer/${idDocument}/status`, null, {
+        params: { status: 'OBSERVADO', observations: this.observacionTexto },
+      })
+      .subscribe({
+        next: (res: any) => {
+          if (!esExitoso(res)) {
+            this.mensaje.set(primerMensaje(res, 'No se pudo guardar la observación.'));
+            return;
+          }
+          this.mensaje.set('Observación guardada.');
+          this.cancelarObservacion();
+          this.cargarDocumentos();
+        },
+        error: () => this.mensaje.set('No se pudo guardar la observación.'),
+      });
+  }
+
+  descargarEntrada(doc: DocumentoEntrada) {
+    this.descargaService.descargar(
+      `${API_BASE_URL}/documententer/download/${doc.idDocumentEnter}`,
+      `${doc.nameDocumentEnter}`,
+      (msg) => this.mensaje.set(msg),
+      'No se pudo descargar el documento.',
+    );
   }
 }

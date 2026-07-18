@@ -8,7 +8,7 @@
   padding: 1.5rem 1.5rem 5rem 1.5rem; /* Margen extra abajo para el menú fijo */
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow-y: auto;
 }
@@ -20,13 +20,34 @@
   align-items: center;
   margin-bottom: 1.5rem;
 }
-.brand-small { color: #aaa; font-size: 0.85rem; font-weight: 600; }
-.btn-logout { background: none; border: none; color: #333; font-weight: 600; cursor: pointer; font-size: 0.85rem;}
+.brand-small {
+  color: #aaa;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.btn-logout {
+  background: none;
+  border: none;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
 
 /* Seccion Bienvenida */
-.welcome-section { margin-bottom: 1.5rem; }
-.welcome-title { font-size: 1.6rem; font-weight: 700; color: #111; margin-bottom: 0.3rem;}
-.welcome-subtitle { color: #777; font-size: 0.85rem; }
+.welcome-section {
+  margin-bottom: 1.5rem;
+}
+.welcome-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 0.3rem;
+}
+.welcome-subtitle {
+  color: #777;
+  font-size: 0.85rem;
+}
 
 /* Badge de Wi-Fi Inteligente */
 .wifi-badge {
@@ -41,15 +62,22 @@
   cursor: pointer;
   transition: all 0.3s;
 }
-.wifi-badge.connected { background-color: #e8f8f5; color: #2ecc71; }
-.wifi-badge.disconnected { background-color: #fdedec; color: #e74c3c; box-shadow: 0 0 10px rgba(231,76,60,0.1); }
+.wifi-badge.connected {
+  background-color: #e8f8f5;
+  color: #2ecc71;
+}
+.wifi-badge.disconnected {
+  background-color: #fdedec;
+  color: #e74c3c;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.1);
+}
 
 /* Tarjeta Principal */
 .main-card {
   background: white;
   border-radius: 20px;
   padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,12 +101,32 @@
   overflow: hidden;
   transition: all 0.3s;
 }
-.camera-box.scanning { border-color: #3498db; background-color: #ebf5fb; }
-.camera-box.verified { border-color: #2ecc71; background-color: #e8f8f5; border-style: solid; }
-.camera-icon { font-size: 2.5rem; color: #444; margin-bottom: 0.5rem; }
-.success-icon { color: #2ecc71; }
-.camera-text { font-size: 0.85rem; color: #666; font-weight: 500; }
-.status-ok { color: #27ae60; font-weight: 600; }
+.camera-box.scanning {
+  border-color: #3498db;
+  background-color: #ebf5fb;
+}
+.camera-box.verified {
+  border-color: #2ecc71;
+  background-color: #e8f8f5;
+  border-style: solid;
+}
+.camera-icon {
+  font-size: 2.5rem;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+.success-icon {
+  color: #2ecc71;
+}
+.camera-text {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+.status-ok {
+  color: #27ae60;
+  font-weight: 600;
+}
 
 /* Línea de escaneo láser */
 .scanner-line {
@@ -90,9 +138,15 @@
   animation: scan 2s infinite ease-in-out;
 }
 @keyframes scan {
-  0% { top: 0%; }
-  50% { top: 100%; }
-  100% { top: 0%; }
+  0% {
+    top: 0%;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0%;
+  }
 }
 
 /* Selector Dropdown */
@@ -120,12 +174,25 @@
   cursor: pointer;
   transition: all 0.3s;
 }
-.btn-register:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+.btn-register:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
 
 /* Logs de hoy */
-.today-logs { width: 100%; }
-.logs-title { font-size: 0.95rem; font-weight: 700; color: #333; margin-bottom: 0.8rem; }
-.logs-row { display: flex; gap: 1rem; }
+.today-logs {
+  width: 100%;
+}
+.logs-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.8rem;
+}
+.logs-row {
+  display: flex;
+  gap: 1rem;
+}
 .log-box {
   flex: 1;
   padding: 0.8rem;
@@ -135,23 +202,36 @@
   gap: 4px;
   border: 1px solid #eef0f2;
 }
-.status-out { background-color: #ebfcf4; }
-.status-in { background-color: #edf4fe; }
-.log-label { font-size: 0.75rem; color: #666; font-weight: 600; }
-.log-time { font-size: 1.1rem; font-weight: 700; color: #111; }
+.status-out {
+  background-color: #ebfcf4;
+}
+.status-in {
+  background-color: #edf4fe;
+}
+.log-label {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 600;
+}
+.log-time {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111;
+}
 
 /* Menú de Navegación Inferior Fijo */
 .bottom-nav {
-  position: absolute;
+  position: fixed; /* antes: absolute */
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%); /* nuevo, para centrarla igual que .mobile-container */
   width: 100%;
+  max-width: 400px; /* mismo max-width que .mobile-container */
   height: 60px;
-  background-color: #f3ecf7; /* Color lavanda sutil del mockup */
+  background-color: #f3ecf7;
   display: flex;
   border-top: 1px solid #e1d5eb;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  z-index: 10; /* nuevo, para que quede encima del contenido */
 }
 .nav-item {
   flex: 1;
@@ -167,12 +247,21 @@
   font-size: 0.7rem;
   font-weight: 600;
 }
-.nav-item i { font-size: 1.2rem; }
-.nav-item.active { color: #2c42a5; }
+.nav-item i {
+  font-size: 1.2rem;
+}
+.nav-item.active {
+  color: #2c42a5;
+}
 
 @media (max-width: 480px) {
-  .mobile-container { height: 100vh; border-radius: 0; }
-  .bottom-nav { border-radius: 0; }
+  .mobile-container {
+    height: 100vh;
+    border-radius: 0;
+  }
+  .bottom-nav {
+    border-radius: 0;
+  }
 }
 
 .camera-feed {

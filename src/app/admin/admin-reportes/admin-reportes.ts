@@ -5,12 +5,15 @@ import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from '../../core/config/api.config';
 import { FormsModule } from '@angular/forms';
 
-interface AttendanceRecord {
-  entryDate: string | null;
-  departureDate: string | null;
-  status: boolean;
+interface AttendanceEvent {
+  idAtendance: string;
   firstName: string | null;
   surName: string | null;
+  eventTimestamp: string | null;
+  eventType: 'ENTRADA' | 'SALIDA' | 'INTENTO_FALLIDO';
+  esAnomalia: boolean;
+  motivoFallo: string | null;
+  serverSimilarity: number | null;
 }
 
 interface UsuarioFiltro {
@@ -31,12 +34,13 @@ type RangoReporte = 'diario' | 'semanal' | 'mensual';
 export class AdminReportesComponent implements OnInit {
   rango = signal<RangoReporte>('diario');
   fechaSeleccionada = new Date().toISOString().split('T')[0];
-  reportes = signal<AttendanceRecord[]>([]);
+  reportes = signal<AttendanceEvent[]>([]);
   cargando = signal(false);
 
   // RF-30: filtro por residente
   usuarios = signal<UsuarioFiltro[]>([]);
   idUserFiltro = '';
+  tipoFiltro = ''; // '', 'ENTRADA', 'SALIDA', 'INTENTO_FALLIDO'
 
   // RF-31: paginación y ordenamiento
   paginaActual = signal(0);
@@ -112,13 +116,14 @@ export class AdminReportesComponent implements OnInit {
       sort: this.ordenDesc() ? 'desc' : 'asc',
     };
     if (this.idUserFiltro) params['idUser'] = this.idUserFiltro;
+    if (this.tipoFiltro) params['tipo'] = this.tipoFiltro;
     return params;
   }
 
   consultar() {
     this.cargando.set(true);
     this.http
-      .get<{ data: { content: AttendanceRecord[]; totalPages: number } }>(
+      .get<{ data: { content: AttendanceEvent[]; totalPages: number } }>(
         `${API_BASE_URL}/attendance/filter`,
         { params: this.buildParams() },
       )
@@ -156,5 +161,28 @@ export class AdminReportesComponent implements OnInit {
       },
       error: () => alert('No se pudo generar el reporte. Intenta nuevamente.'),
     });
+  }
+
+  onTipoCambio() {
+    this.paginaActual.set(0);
+    this.consultar();
+  }
+
+  etiquetaTipo(tipo: string): string {
+    switch (tipo) {
+      case 'ENTRADA': return 'Entrada';
+      case 'SALIDA': return 'Salida';
+      case 'INTENTO_FALLIDO': return 'Intento fallido';
+      default: return tipo;
+    }
+  }
+
+  claseTipo(tipo: string): string {
+    switch (tipo) {
+      case 'ENTRADA': return 'badge badge-completo';
+      case 'SALIDA': return 'badge badge-rol';
+      case 'INTENTO_FALLIDO': return 'badge badge-ausente';
+      default: return 'badge';
+    }
   }
 }

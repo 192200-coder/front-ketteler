@@ -1,55 +1,7 @@
-.admin-container {
-  padding: 40px;
-  font-family: sans-serif;
-  background-color: #f8f9fa;
-  min-height: 100vh;
-}
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
-}
 
-.title-section h2 { margin: 0 0 5px 0; color: #1a1a1a; }
-.title-section p { margin: 0; color: #6c757d; font-size: 14px; }
 
-.btn-back {
-  background: none;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 16px;
-}
 
-.table-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  margin-bottom: 20px;
-}
-
-.custom-table { width: 100%; border-collapse: collapse; }
-.custom-table th, .custom-table td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid #f0f0f0;
-}
-.custom-table th { color: #6c757d; font-weight: 500; font-size: 14px; }
-
-.badge { padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; }
-.badge-rol { background-color: #f0e6ff; color: #6b21a8; }
-
-.custom-input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  outline: none;
-  box-sizing: border-box;
-}
 
 .btn-action {
   background-color: #2e3b9e;
@@ -62,33 +14,4 @@
 }
 .btn-action:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.btn-secondary {
-  background-color: #4a5073;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
 
-.actions { white-space: nowrap; }
-.icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  margin-right: 8px;
-}
-.icon-btn.delete { filter: hue-rotate(0deg); }
-
-.login-error {
-  color: #d32f2f;
-  background-color: #fdecea;
-  border: 1px solid #f5c6cb;
-  border-radius: 8px;
-  padding: 0.6rem 0.8rem;
-  font-size: 0.85rem;
-  text-align: center;
-  margin-bottom: 1rem;
-}

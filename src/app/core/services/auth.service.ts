@@ -30,39 +30,44 @@ export class AuthService {
 
   private lastPasswordUsed: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {}
 
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${API_BASE_URL}/login`, { email, password }).pipe(
-      tap(response => {
+      tap((response) => {
         if (response.type === 'success' && response.token) {
           safeSetItem(TOKEN_KEY, response.token);
           safeSetItem(USER_KEY, JSON.stringify(response));
           this.currentUser.set(response);
           this.lastPasswordUsed = password;
         }
-      })
+      }),
     );
   }
 
   changePassword(newPassword: string): Observable<ChangePasswordResponse> {
     const oldPassword = this.lastPasswordUsed ?? '';
-    return this.http.put<ChangePasswordResponse>(`${API_BASE_URL}/changepassword`, {
-      oldPassword,
-      newPassword
-    }).pipe(
-      tap(response => {
-        if (response.type === 'success') {
-          this.lastPasswordUsed = newPassword;
-          const user = this.currentUser();
-          if (user) {
-            const updated = { ...user, firstLogin: false };
-            safeSetItem(USER_KEY, JSON.stringify(updated));
-            this.currentUser.set(updated);
-          }
-        }
+    return this.http
+      .put<ChangePasswordResponse>(`${API_BASE_URL}/changepassword`, {
+        oldPassword,
+        newPassword,
       })
-    );
+      .pipe(
+        tap((response) => {
+          if (response.type === 'success') {
+            this.lastPasswordUsed = newPassword;
+            const user = this.currentUser();
+            if (user) {
+              const updated = { ...user, firstLogin: false };
+              safeSetItem(USER_KEY, JSON.stringify(updated));
+              this.currentUser.set(updated);
+            }
+          }
+        }),
+      );
   }
 
   logout(): void {
@@ -88,5 +93,15 @@ export class AuthService {
   private loadUser(): LoginResponse | null {
     const raw = safeGetItem(USER_KEY);
     return raw ? JSON.parse(raw) : null;
+  }
+
+  changePasswordAdmin(
+    oldPassword: string,
+    newPassword: string,
+  ): Observable<ChangePasswordResponse> {
+    return this.http.put<ChangePasswordResponse>(`${API_BASE_URL}/changepasswordadmin`, {
+      oldPassword,
+      newPassword,
+    });
   }
 }

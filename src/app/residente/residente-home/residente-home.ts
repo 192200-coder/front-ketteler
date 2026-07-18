@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild, signal } from '@an
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { NetworkService } from '../../core/services/network.service';
@@ -36,9 +36,10 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
   @ViewChild('videoPreview') videoPreview?: ElementRef<HTMLVideoElement>;
 
   isCorrectWifi = signal(false);
-  isScanning = false;
+  isScanning = signal(false); // <--- Tu Signal modificado
   isFaceVerified = false;
   selectedMotive = '';
+  otroMotivoTexto = '';
   exitTime = '--:--';
   entryTime = '--:--';
 
@@ -69,7 +70,6 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Primero carga el perfil, y solo cuando termina verifica la red
     this.profileService.cargarPerfil().subscribe({
       next: async () => {
         this.cargarProximaAccion();
@@ -133,7 +133,8 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
   cuentaRegresiva = signal<number | null>(null);
 
   async startFacialScan() {
-    if (!this.esAppNativa || this.isScanning || this.isFaceVerified) return;
+    // 1. LEER valor del Signal con this.isScanning()
+    if (!this.esAppNativa || this.isScanning() || this.isFaceVerified) return;
 
     const permiso = await Camera.checkPermissions();
     if (permiso.camera !== 'granted') {
@@ -152,20 +153,22 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
         video: { facingMode: 'user' },
       });
     } catch (err) {
-      console.error('getUserMedia error', err); // deja este log, ayuda a diagnosticar si vuelve a fallar
+      console.error('getUserMedia error', err);
       this.mensajeRegistro.set('No se pudo acceder a la cámara. Revisa los permisos.');
       return;
     }
 
     if (this.videoPreview?.nativeElement) {
       this.videoPreview.nativeElement.srcObject = this.mediaStream;
+      this.videoPreview.nativeElement.play().catch(() => {});
     } else {
       this.mensajeRegistro.set('Error interno: no se encontró el elemento de video.');
       this.detenerCamara();
       return;
     }
 
-    this.isScanning = true;
+    // 2. ACTUALIZAR valor con .set(true)
+    this.isScanning.set(true);
     this.cuentaRegresiva.set(5);
 
     const intervalo = setInterval(() => {
@@ -178,11 +181,11 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
       }
     }, 1000);
 
-    this.isScanning = true;
+    // Nota: El código original tenía un duplicado innecesario aquí. Lo mantengo actualizado con .set(true)
+    this.isScanning.set(true);
     setTimeout(() => this.capturarFoto(), 3500);
   }
 
-  // NUEVO
   abrirAjustesCamara() {
     NativeSettings.open({
       optionAndroid: AndroidSettings.ApplicationDetails,
@@ -209,7 +212,8 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
     canvas.toBlob(
       (blob) => {
         this.fotoCapturada = blob;
-        this.isScanning = false;
+        // 3. ACTUALIZAR valor con .set(false)
+        this.isScanning.set(false);
         this.isFaceVerified = !!blob;
         this.detenerCamara();
 
@@ -230,7 +234,8 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
   }
 
   private cancelarEscaneo() {
-    this.isScanning = false;
+    // 4. ACTUALIZAR valor con .set(false)
+    this.isScanning.set(false);
     this.detenerCamara();
   }
 
@@ -240,7 +245,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
 
     const formData = new FormData();
     formData.append('idUser', userId);
-    formData.append('description', this.selectedMotive);
+    formData.append('description', this.motivoFinal);
     formData.append('file', this.fotoCapturada, 'asistencia.jpg');
     if (this.redActual?.ssid) formData.append('ssid', this.redActual.ssid);
     if (this.redActual?.bssid) formData.append('bssid', this.redActual.bssid);
@@ -266,6 +271,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
           this.isFaceVerified = false;
           this.fotoCapturada = null;
           this.selectedMotive = '';
+          this.otroMotivoTexto = '';
         } else {
           this.mensajeRegistro.set(
             res.error ?? 'No se pudo verificar tu identidad. Intenta nuevamente.',
@@ -274,8 +280,16 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
           this.fotoCapturada = null;
         }
       },
-      error: () =>
-        this.mensajeRegistro.set('No se pudo conectar con el servidor. Intenta nuevamente.'),
+      error: (err: HttpErrorResponse) => {
+        const body = err.error as Partial<FaceVerificationResponse> | undefined;
+        const mensaje =
+          body?.error ??
+          body?.listMessage?.[0] ??
+          'No se pudo conectar con el servidor. Intenta nuevamente.';
+        this.mensajeRegistro.set(mensaje);
+        this.isFaceVerified = false;
+        this.fotoCapturada = null;
+      },
     });
   }
 
@@ -286,5 +300,8 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
   navigateTo(view: string) {
     if (view === 'historial') this.router.navigate(['/residente-historial']);
     else if (view === 'documentos') this.router.navigate(['/residente-documentos']);
+  }
+  get motivoFinal(): string {
+    return this.selectedMotive === 'otros' ? this.otroMotivoTexto.trim() : this.selectedMotive;
   }
 }

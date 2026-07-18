@@ -14,7 +14,11 @@
     <button class="tab-item" [class.active]="activeTab() === 'subir'" (click)="setTab('subir')">
       <i class="fa-regular fa-star"></i> Subir
     </button>
-    <button class="tab-item" [class.active]="activeTab() === 'renuncia'" (click)="setTab('renuncia')">
+    <button
+      class="tab-item"
+      [class.active]="activeTab() === 'renuncia'"
+      (click)="setTab('renuncia')"
+    >
       Renuncia
     </button>
   </div>
@@ -46,7 +50,11 @@
           <p class="drop-text">{{ fileNotasName || 'Toca para seleccionar' }}</p>
           <input type="file" id="fileNotas" hidden (change)="onFileSelected($event, 'notas')" />
         </div>
-        <button class="btn-upload-doc" [disabled]="!fileNotasName" (click)="uploadDocument('notas')">
+        <button
+          class="btn-upload-doc"
+          [disabled]="!fileNotasName"
+          (click)="uploadDocument('notas')"
+        >
           Subir constancia de notas
         </button>
       </div>
@@ -65,7 +73,11 @@
         }
 
         @if (miRenuncia() && miRenuncia()!.status === 'PENDIENTE') {
-          <button class="btn-upload-doc" style="margin-bottom:1rem; background:#196f3d;" (click)="descargarFormatoRenuncia()">
+          <button
+            class="btn-upload-doc"
+            style="margin-bottom: 1rem; background: #196f3d"
+            (click)="descargarFormatoRenuncia()"
+          >
             <i class="fa-solid fa-download"></i> Descargar formato asignado
           </button>
         }
@@ -73,7 +85,12 @@
         <div class="drop-zone" (click)="triggerFileInput('fileRenuncia')">
           <i class="fa-regular fa-file-lines doc-icon"></i>
           <p class="drop-text">{{ fileRenunciaName || 'Toca para seleccionar' }}</p>
-          <input type="file" id="fileRenuncia" hidden (change)="onFileSelected($event, 'renuncia')" />
+          <input
+            type="file"
+            id="fileRenuncia"
+            hidden
+            (change)="onFileSelected($event, 'renuncia')"
+          />
         </div>
         <button class="btn-upload-doc" [disabled]="!fileRenunciaName" (click)="uploadRenuncia()">
           Enviar carta de renuncia
@@ -98,6 +115,29 @@
             }
             @if (doc.downloadable) {
               <button class="btn-upload-doc" (click)="descargarDocumento(doc.idDocumentGeneral!)">
+                <i class="fa-solid fa-download"></i> Descargar documento
+              </button>
+            }
+          </div>
+        }
+      }
+      
+      @if (documentosEntrada().length > 0) {
+        <h3 class="doc-title" style="margin-top: 1rem">Documentos de entrada</h3>
+        @for (doc of documentosEntrada(); track doc.idDocumentEnter) {
+          <div class="document-card">
+            <h3 class="doc-title">{{ doc.nameDocumentEnter }}</h3>
+            <p class="doc-subtitle">
+              Estado: <span [class]="badgeClass(doc.status)">{{ doc.status }}</span>
+            </p>
+            @if (doc.observations) {
+              <p class="doc-subtitle">Observación: {{ doc.observations }}</p>
+            }
+            @if (doc.downloadable) {
+              <button
+                class="btn-upload-doc"
+                (click)="descargarDocumentoEntrada(doc.idDocumentEnter)"
+              >
                 <i class="fa-solid fa-download"></i> Descargar documento
               </button>
             }

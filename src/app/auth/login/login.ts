@@ -3,13 +3,14 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  styleUrls: ['./login.css'],
 })
 export class LoginComponent {
   showPassword = false;
@@ -18,7 +19,10 @@ export class LoginComponent {
   password = '';
   errorMessage = signal<string | null>(null);
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
@@ -40,7 +44,9 @@ export class LoginComponent {
 
         switch (response.role) {
           case 'RESIDENTE':
-            this.router.navigate([response.firstLogin ? '/residente-cambiar-contra' : '/residente-home']);
+            this.router.navigate([
+              response.firstLogin ? '/residente-cambiar-contra' : '/residente-home',
+            ]);
             break;
           case 'ADMIN':
           case 'SUPER_ADMIN':
@@ -50,10 +56,13 @@ export class LoginComponent {
             this.errorMessage.set('Tu cuenta no tiene un rol válido para acceder.');
         }
       },
-      error: () => {
+      error: (err: HttpErrorResponse) => {
         this.buttonText = 'Iniciar sesión';
-        this.errorMessage.set('No se pudo conectar con el servidor. Intenta nuevamente.');
-      }
+        const body = err.error as { listMessage?: string[] } | undefined;
+        this.errorMessage.set(
+          body?.listMessage?.[0] ?? 'No se pudo conectar con el servidor. Intenta nuevamente.',
+        );
+      },
     });
   }
 }

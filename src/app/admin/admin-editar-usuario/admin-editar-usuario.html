@@ -9,35 +9,44 @@
     @if (cargando()) {
       <p>Cargando información del usuario...</p>
     } @else {
-
       <div class="form-group">
         <label>Nombres</label>
-        <input type="text" class="custom-input" [(ngModel)]="firstName" name="firstName">
+        <input type="text" class="custom-input" [(ngModel)]="firstName" name="firstName" />
       </div>
 
       <div class="form-group">
         <label>Apellidos</label>
-        <input type="text" class="custom-input" [(ngModel)]="surName" name="surName">
+        <input type="text" class="custom-input" [(ngModel)]="surName" name="surName" />
       </div>
 
       <div class="form-group">
         <label>Correo</label>
-        <input type="email" class="custom-input" [(ngModel)]="email" name="email">
+        <input type="email" class="custom-input" [(ngModel)]="email" name="email" />
       </div>
 
       <div class="form-group">
         <label>Nueva contraseña (dejar en blanco para no cambiarla)</label>
-        <input type="password" class="custom-input" [(ngModel)]="password" name="password">
+        <input type="password" class="custom-input" [(ngModel)]="password" name="password" />
       </div>
 
       <div class="form-group">
         <label>Teléfono</label>
-        <input type="number" class="custom-input" [(ngModel)]="cellPhoneNumber" name="cellPhoneNumber">
+        <input
+          type="number"
+          class="custom-input"
+          [(ngModel)]="cellPhoneNumber"
+          name="cellPhoneNumber"
+        />
       </div>
 
       <div class="form-group">
         <label>Teléfono de emergencia</label>
-        <input type="number" class="custom-input" [(ngModel)]="cellPhoneEmergency" name="cellPhoneEmergency">
+        <input
+          type="number"
+          class="custom-input"
+          [(ngModel)]="cellPhoneEmergency"
+          name="cellPhoneEmergency"
+        />
       </div>
 
       <div class="form-group">
@@ -46,7 +55,53 @@
           {{ active ? 'Activo — clic para desactivar' : 'Inactivo — clic para activar' }}
         </button>
       </div>
+      <div class="form-group">
+        <label
+          >Fotos de referencia para reconocimiento facial (sube 2-5 fotos claras del rostro)</label
+        >
+        <input
+          type="file"
+          accept="image/jpeg,image/png"
+          multiple
+          class="custom-input"
+          (change)="onFotosSeleccionadas($event)"
+        />
+        @if (fotosSeleccionadas.length > 0) {
+          <p>{{ fotosSeleccionadas.length }} foto(s) lista(s) para subir.</p>
+        }
+        <button
+          type="button"
+          class="btn-action"
+          style="margin-top: 0.5rem"
+          [disabled]="!fotosSeleccionadas.length || subiendoFotos()"
+          (click)="subirFotos()"
+        >
+          {{ subiendoFotos() ? 'Procesando...' : 'Subir fotos' }}
+        </button>
 
+        @if (reportePhotos().length > 0) {
+          <table class="custom-table" style="margin-top: 1rem">
+            <thead>
+              <tr>
+                <th>Archivo</th>
+                <th>Calidad</th>
+                <th>Detalle</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of reportePhotos(); track r.archivo) {
+                <tr>
+                  <td>{{ r.archivo }}</td>
+                  <td>
+                    <span [class]="badgeCalidad(r.calidad)">{{ r.calidad }}</span>
+                  </td>
+                  <td>{{ r.mensaje }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
       <div class="form-actions">
         <button class="btn-secondary" routerLink="/admin-gestion-usuarios">Cancelar</button>
         <button class="btn-primary" [disabled]="guardando()" (click)="guardarCambios()">

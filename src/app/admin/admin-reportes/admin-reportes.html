@@ -49,6 +49,15 @@
           <option [value]="u.idUser">{{ u.firstName }} {{ u.surName }}</option>
         }
       </select>
+      <div class="filter-group">
+        <label>Tipo de evento</label>
+        <select class="date-input" [(ngModel)]="tipoFiltro" (change)="onTipoCambio()">
+          <option value="">Todos</option>
+          <option value="ENTRADA">Entradas</option>
+          <option value="SALIDA">Salidas</option>
+          <option value="INTENTO_FALLIDO">Intentos fallidos</option>
+        </select>
+      </div>
     </div>
 
     <div class="filter-group">
@@ -83,35 +92,47 @@
       <thead>
         <tr>
           <th>Residente</th>
-          <th>Entrada</th>
-          <th>Salida</th>
-          <th>Estado</th>
+          <th>Fecha y hora</th>
+          <th>Tipo</th>
+          <th>Similitud</th>
+          <th>Detalle</th>
         </tr>
       </thead>
       <tbody>
         @if (cargando()) {
           <tr>
-            <td colspan="4" style="text-align: center; padding: 2rem">Cargando...</td>
+            <td colspan="5" style="text-align: center; padding: 2rem">Cargando...</td>
           </tr>
         } @else if (reportes().length === 0) {
           <tr>
-            <td colspan="4" style="text-align: center; padding: 2rem">
-              Sin registros en el rango seleccionado.
+            <td colspan="5" style="text-align: center; padding: 2rem">
+              Sin eventos en el rango seleccionado.
             </td>
           </tr>
         } @else {
-          @for (rep of reportes(); track rep.entryDate) {
-            <tr>
-              <td>{{ rep.firstName }} {{ rep.surName }}</td>
-              <td>{{ rep.entryDate ? (rep.entryDate | date: 'dd/MM/yyyy HH:mm') : '—' }}</td>
+          @for (ev of reportes(); track ev.idAtendance) {
+            <tr [style.background]="ev.esAnomalia ? '#fff8f0' : ''">
+              <td>{{ ev.firstName }} {{ ev.surName }}</td>
               <td>
-                {{ rep.departureDate ? (rep.departureDate | date: 'dd/MM/yyyy HH:mm') : '—' }}
+                {{ ev.eventTimestamp ? (ev.eventTimestamp | date: 'dd/MM/yyyy HH:mm') : '—' }}
               </td>
               <td>
-                <span class="badge" [ngClass]="rep.status ? 'badge-ausente' : 'badge-completo'">
-                  {{ rep.status ? 'Dentro' : 'Completo' }}
-                </span>
+                <span [class]="claseTipo(ev.eventType)">{{ etiquetaTipo(ev.eventType) }}</span>
+                @if (ev.esAnomalia) {
+                  <span
+                    class="badge badge-ausente"
+                    style="margin-left: 0.3rem"
+                    title="Anomalía detectada"
+                    >⚠</span
+                  >
+                }
               </td>
+              <td>
+                {{
+                  ev.serverSimilarity != null ? (ev.serverSimilarity | number: '1.0-1') + '%' : '—'
+                }}
+              </td>
+              <td style="font-size: 0.85rem; color: #6c757d">{{ ev.motivoFallo || '—' }}</td>
             </tr>
           }
         }

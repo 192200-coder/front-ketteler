@@ -1,10 +1,11 @@
-// src/app/residente/residente-documentos/residente-documentos.ts
 import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 import { API_BASE_URL } from '../../core/config/api.config';
+import { esExitoso, primerMensaje } from '../../core/utils/storage.util';
+import { DescargaService } from '../../core/services/descarga.service';
 
 type Tab = 'subir' | 'misdocs' | 'renuncia';
 
@@ -18,10 +19,19 @@ interface DocumentoItem {
   downloadable: boolean;
 }
 
+interface DocumentoEntradaItem {
+  idDocumentEnter: string;
+  nameDocumentEnter: string;
+  status: string;
+  observations?: string;
+  downloadable: boolean;
+}
+
 @Component({
   selector: 'app-residente-documentos',
   standalone: true,
   imports: [CommonModule],
+  providers: [DatePipe],
   templateUrl: './residente-documentos.html',
   styleUrls: ['./residente-documentos.css'],
 })
@@ -35,6 +45,7 @@ export class ResidenteDocumentosComponent implements OnInit {
   private fileNotas: File | null = null;
   private fileRenuncia: File | null = null;
 
+  documentosEntrada = signal<DocumentoEntradaItem[]>([]);
   misDocumentos = signal<DocumentoItem[]>([]);
   miRenuncia = signal<DocumentoItem | null>(null);
   loadingDocs = signal(false);
@@ -43,12 +54,15 @@ export class ResidenteDocumentosComponent implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private authService: AuthService,
+    private datePipe: DatePipe,
+    private authService: AuthService, // el que ya tenías
+    private descargaService: DescargaService,
   ) {}
 
   ngOnInit() {
-    // precargamos "Mis docs" para que no se sienta vacío al cambiar de tab
     this.cargarMisDocumentos();
+    this.cargarMiRenuncia();
+    this.cargarDocumentosEntrada();
   }
 
   goBack() {
@@ -57,7 +71,11 @@ export class ResidenteDocumentosComponent implements OnInit {
 
   setTab(tab: Tab) {
     this.activeTab.set(tab);
-    if (tab === 'misdocs') this.cargarMisDocumentos();
+    if (tab === 'misdocs') {
+      this.cargarMisDocumentos();
+      this.cargarDocumentosEntrada();
+    }
+    if (tab === 'renuncia') this.cargarMiRenuncia();
   }
 
   triggerFileInput(inputId: string) {
@@ -70,7 +88,7 @@ export class ResidenteDocumentosComponent implements OnInit {
     const file = input.files[0];
 
     const tiposPermitidos = ['application/pdf', 'image/jpeg', 'image/png'];
-    const maxBytes = 10 * 1024 * 1024; // 10 MB
+    const maxBytes = 10 * 1024 * 1024;
 
     if (!tiposPermitidos.includes(file.type)) {
       this.mensaje.set('Solo se permiten archivos PDF, JPG o PNG.');
@@ -107,8 +125,12 @@ export class ResidenteDocumentosComponent implements OnInit {
     formData.append('file', file);
 
     this.http.post(`${API_BASE_URL}/registerdocumentgeneral`, formData).subscribe({
-      next: () => {
-        this.mensaje.set(`Documento subido. Quedará pendiente de validación del administrador.`);
+      next: (res: any) => {
+        if (!esExitoso(res)) {
+          this.mensaje.set(primerMensaje(res, 'No se pudo subir el documento.'));
+          return;
+        }
+        this.mensaje.set('Documento subido. Quedará pendiente de validación del administrador.');
         if (type === 'pago') {
           this.filePagoName = '';
           this.filePago = null;
@@ -130,10 +152,15 @@ export class ResidenteDocumentosComponent implements OnInit {
     formData.append('file', this.fileRenuncia);
 
     this.http.post(`${API_BASE_URL}/registerdocumentresignation`, formData).subscribe({
-      next: () => {
+      next: (res: any) => {
+        if (!esExitoso(res)) {
+          this.mensaje.set(primerMensaje(res, 'No se pudo enviar el documento.'));
+          return;
+        }
         this.mensaje.set('Carta de renuncia enviada. El administrador la revisará.');
         this.fileRenunciaName = '';
         this.fileRenuncia = null;
+        this.cargarMiRenuncia();
       },
       error: () => this.mensaje.set('No se pudo enviar el documento. Intenta nuevamente.'),
     });
@@ -141,16 +168,12 @@ export class ResidenteDocumentosComponent implements OnInit {
 
   private cargarMisDocumentos() {
     this.loadingDocs.set(true);
-    this.http.get<{ data: DocumentoItem[] }>(`${API_BASE_URL}/mydocuments`).subscribe({
+    this.http.get<{ data: DocumentoItem[] }>(`${API_BASE_URL}/mydocuments/all`).subscribe({
       next: (res) => {
         this.misDocumentos.set(res.data ?? []);
         this.loadingDocs.set(false);
       },
       error: () => this.loadingDocs.set(false),
-    });
-    this.http.get<{ data: DocumentoItem | null }>(`${API_BASE_URL}/myresignation`).subscribe({
-      next: (res) => this.miRenuncia.set(res.data ?? null),
-      error: () => {},
     });
   }
 
@@ -173,10 +196,45 @@ export class ResidenteDocumentosComponent implements OnInit {
   }
 
   descargarDocumento(idDocument: string) {
-    window.open(`${API_BASE_URL}/documents/download/${idDocument}`, '_blank');
+    this.descargaService.descargar(
+      `${API_BASE_URL}/documents/download/${idDocument}`,
+      `documento-${idDocument}`,
+      (msg) => this.mensaje.set(msg),
+      'No se pudo descargar el documento.',
+    );
   }
 
   descargarFormatoRenuncia() {
-    window.open(`${API_BASE_URL}/resignation/format/download`, '_blank');
+    this.descargaService.descargar(
+      `${API_BASE_URL}/resignation/format/download`,
+      'formato-renuncia',
+      (msg) => this.mensaje.set(msg),
+      'No se pudo descargar el formato de renuncia.',
+    );
+  }
+
+  private cargarMiRenuncia() {
+    this.http.get<{ data: DocumentoItem | null }>(`${API_BASE_URL}/myresignation`).subscribe({
+      next: (res) => this.miRenuncia.set(res.data ?? null),
+      error: () => {}, // sin renuncia registrada aún no es un error real para el residente
+    });
+  }
+
+  private cargarDocumentosEntrada() {
+    this.http
+      .get<{ data: DocumentoEntradaItem[] }>(`${API_BASE_URL}/mydocumententer/all`)
+      .subscribe({
+        next: (res) => this.documentosEntrada.set(res.data ?? []),
+        error: () => {},
+      });
+  }
+
+  descargarDocumentoEntrada(idDocument: string) {
+    this.descargaService.descargar(
+      `${API_BASE_URL}/documententer/download/${idDocument}`,
+      `documento-entrada-${idDocument}`,
+      (msg) => this.mensaje.set(msg),
+      'No se pudo descargar el documento.',
+    );
   }
 }

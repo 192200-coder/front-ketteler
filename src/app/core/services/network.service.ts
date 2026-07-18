@@ -20,15 +20,17 @@ export class NetworkService {
       const { CapacitorWifi } = await import('@capgo/capacitor-wifi');
 
       const permiso = await CapacitorWifi.checkPermissions();
+      console.log('[NetworkService] permiso actual:', permiso); // ← diagnóstico
+
       if (permiso.location !== 'granted') {
         const solicitado = await CapacitorWifi.requestPermissions({ permissions: ['location'] });
+        console.log('[NetworkService] permiso solicitado:', solicitado); // ← diagnóstico
         if (solicitado.location !== 'granted') return null;
       }
 
       const info = await CapacitorWifi.getWifiInfo();
+      console.log('[NetworkService] info wifi cruda:', info); // ← diagnóstico
 
-      // Android devuelve estos valores "placeholder" cuando la Ubicación
-      // del sistema está apagada o no se pudo resolver por otra razón.
       const noResuelto =
         !info.ssid || info.ssid === '<unknown ssid>' || info.bssid === '02:00:00:00:00:00';
 

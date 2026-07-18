@@ -1,0 +1,95 @@
+<main class="mobile-container">
+  <header class="login-header">
+    <span class="top-title">MI CUENTA</span>
+  </header>
+
+  <section class="brand-section">
+    <h1 class="brand-title">Cambiar contraseña</h1>
+  </section>
+
+  <form (submit)="onGuardar($event)" class="login-form">
+    <div class="input-group">
+      <label for="actual">Contraseña actual</label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-lock icon-left"></i>
+        <input
+          [type]="showActual ? 'text' : 'password'"
+          id="actual"
+          name="actual"
+          placeholder="•••••••••••••"
+          [(ngModel)]="contrasenaActual"
+          required
+        />
+        <i
+          class="fa-regular icon-right"
+          [class.fa-eye-slash]="!showActual"
+          [class.fa-eye]="showActual"
+          (click)="showActual = !showActual"
+        ></i>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="nueva">Nueva contraseña</label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-lock icon-left"></i>
+        <input
+          [type]="showNueva ? 'text' : 'password'"
+          id="nueva"
+          name="nueva"
+          placeholder="•••••••••••••"
+          [(ngModel)]="nuevaContrasena"
+          required
+        />
+        <i
+          class="fa-regular icon-right"
+          [class.fa-eye-slash]="!showNueva"
+          [class.fa-eye]="showNueva"
+          (click)="showNueva = !showNueva"
+        ></i>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="repetir">Repite la nueva contraseña</label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-lock icon-left"></i>
+        <input
+          [type]="showRepetir ? 'text' : 'password'"
+          id="repetir"
+          name="repetir"
+          placeholder="•••••••••••••"
+          [(ngModel)]="repetirContrasena"
+          required
+        />
+        <i
+          class="fa-regular icon-right"
+          [class.fa-eye-slash]="!showRepetir"
+          [class.fa-eye]="showRepetir"
+          (click)="showRepetir = !showRepetir"
+        ></i>
+      </div>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="login-error">{{ errorMessage() }}</p>
+    }
+    @if (successMessage()) {
+      <p style="color: #1e8e3e; text-align: center; margin-bottom: 1rem; font-size: 0.9rem">
+        {{ successMessage() }}
+      </p>
+    }
+
+    <button type="submit" class="btn-primary" [disabled]="guardando">
+      {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
+    </button>
+    <button
+      type="button"
+      class="btn-secondary"
+      style="margin-top: 0.8rem; width: 100%"
+      (click)="volver()"
+    >
+      Volver
+    </button>
+  </form>
+</main>

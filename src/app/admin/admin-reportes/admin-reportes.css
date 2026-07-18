@@ -1,16 +1,4 @@
-.admin-container {
-  padding: 40px;
-  font-family: sans-serif;
-  background-color: #f8f9fa;
-  min-height: 100vh;
-}
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
-}
 
 .btn-back { background: none; border: none; font-weight: bold; cursor: pointer; font-size: 16px; }
 
@@ -67,12 +55,6 @@
   font-weight: bold;
 }
 
-.table-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
 .mt-20 { margin-top: 20px; }
 .table-title { font-weight: bold; margin-bottom: 15px; }
 
@@ -80,14 +62,4 @@
 .custom-table th, .custom-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #f0f0f0; }
 .custom-table th { color: #6c757d; font-size: 14px; }
 
-.badge { padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; }
-.badge-completo { background-color: #e6f4ea; color: #1e8e3e; }
-.badge-ausente { background-color: #fce8e6; color: #d93025; }
 
-.btn-tab:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.title-section h2 { margin: 0 0 5px 0; color: #1a1a1a; }
-.title-section p { margin: 0; color: #6c757d; font-size: 14px; }

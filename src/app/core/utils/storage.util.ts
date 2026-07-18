@@ -12,3 +12,11 @@ export function safeRemoveItem(key: string): void {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(key);
 }
+
+export function esExitoso(res: any): boolean {
+  return res?.type === 'success';
+}
+
+export function primerMensaje(res: any, fallback: string): string {
+  return res?.listMessage?.[0] ?? fallback;
+}

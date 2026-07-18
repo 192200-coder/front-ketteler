@@ -13,6 +13,7 @@ import { AdminCrearUsuarioComponent } from './admin/admin-crear-usuario/admin-cr
 import { AdminEditarUsuarioComponent } from './admin/admin-editar-usuario/admin-editar-usuario';
 import { AdminReportesComponent } from './admin/admin-reportes/admin-reportes';
 import { AdminDocumentosUsuarioComponent } from './admin/admin-documentos-usuario/admin-documentos-usuario';
+import { AdminCambiarContrasenaComponent } from './admin/admin-cambiar-contrasena/admin-cambiar-contrasena';
 
 import { authGuard, roleGuard } from './core/guards/auth.guard';
 
@@ -31,6 +32,7 @@ export const routes: Routes = [
     { path: 'admin-editar-usuario', component: AdminEditarUsuarioComponent, canActivate: [authGuard, roleGuard(['SUPER_ADMIN', 'ADMIN'])] },
     { path: 'admin-reportes', component: AdminReportesComponent, canActivate: [authGuard, roleGuard(['SUPER_ADMIN', 'ADMIN'])] },
     { path: 'admin-documentos-usuario', component: AdminDocumentosUsuarioComponent, canActivate: [authGuard, roleGuard(['SUPER_ADMIN', 'ADMIN'])] },
+    { path: 'admin-cambiar-contrasena', component: AdminCambiarContrasenaComponent, canActivate: [authGuard, roleGuard(['SUPER_ADMIN', 'ADMIN'])] },
 
     { path: '**', redirectTo: 'login' },
 ];

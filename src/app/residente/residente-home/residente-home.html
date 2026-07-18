@@ -15,7 +15,11 @@
     <p class="login-error">{{ mensajeRed() }}</p>
   }
 
-  <div class="wifi-badge" [class.connected]="isCorrectWifi()" [class.disconnected]="!isCorrectWifi()">
+  <div
+    class="wifi-badge"
+    [class.connected]="isCorrectWifi()"
+    [class.disconnected]="!isCorrectWifi()"
+  >
     <i
       class="fa-solid"
       [class.fa-wifi]="isCorrectWifi()"
@@ -46,7 +50,7 @@
     <div
       class="camera-box"
       (click)="startFacialScan()"
-      [class.scanning]="isScanning"
+      [class.scanning]="isScanning()"
       [class.verified]="isFaceVerified"
     >
       <video
@@ -54,7 +58,7 @@
         autoplay
         playsinline
         muted
-        [style.display]="isScanning ? 'block' : 'none'"
+        [style.display]="isScanning() ? 'block' : 'none'"
         style="
           position: absolute;
           inset: 0;
@@ -70,12 +74,12 @@
         <img [src]="fotoPreviewUrl()" class="camera-feed visible" alt="Foto capturada" />
       }
 
-      @if (!isScanning && !isFaceVerified) {
+      @if (!isScanning() && !isFaceVerified) {
         <i class="fa-solid fa-camera camera-icon"></i>
         <p class="camera-text">Toca para validación facial</p>
       }
 
-      @if (isScanning) {
+      @if (isScanning()) {
         <div class="scanner-line"></div>
         @if (cuentaRegresiva()) {
           <p class="camera-countdown">{{ cuentaRegresiva() }}</p>
@@ -97,11 +101,26 @@
         <option value="trabajo">Jornada Laboral / Prácticas</option>
         <option value="otros">Otros (Requiere autorización)</option>
       </select>
+
+      @if (selectedMotive === 'otros') {
+        <input
+          type="text"
+          class="custom-input"
+          placeholder="Especifica el motivo"
+          [(ngModel)]="otroMotivoTexto"
+          style="margin-top: 0.5rem"
+        />
+      }
     </div>
 
     <button
       class="btn-register"
-      [disabled]="!isCorrectWifi() || !isFaceVerified || !selectedMotive"
+      [disabled]="
+        !isCorrectWifi() ||
+        !isFaceVerified ||
+        !selectedMotive ||
+        (selectedMotive === 'otros' && !otroMotivoTexto.trim())
+      "
       (click)="registerExit()"
     >
       {{ proximaAccion() === 'entrada' ? 'Registrar entrada' : 'Registrar salida' }}
