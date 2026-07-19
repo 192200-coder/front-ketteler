@@ -79,11 +79,11 @@
     <table class="custom-table">
       <thead>
         <tr>
-          <th>Tipo</th>
-          <th>Archivo</th>
-          <th>Estado</th>
-          <th>Observación</th>
-          <th>Acciones</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Archivo</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Observación</th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -101,10 +101,11 @@
             </td>
             <td>{{ doc.observations || '—' }}</td>
             <td class="actions">
-              <button class="icon-btn" title="Descargar" (click)="descargarGeneral(doc)">⬇️</button>
+              <button class="icon-btn" title="Descargar" aria-label="Descargar documento" (click)="descargarGeneral(doc)">⬇️</button>
               <button
                 class="icon-btn"
                 title="Aprobar"
+                aria-label="Aprobar documento"
                 (click)="actualizarEstadoGeneral(doc.idDocumentGeneral, 'APROBADO')"
               >
                 ✅
@@ -112,6 +113,7 @@
               <button
                 class="icon-btn"
                 title="Agregar observación"
+                aria-label="Agregar observación"
                 (click)="iniciarObservacion(doc.idDocumentGeneral)"
               >
                 ✏️
@@ -119,6 +121,7 @@
               <button
                 class="icon-btn delete"
                 title="Rechazar"
+                aria-label="Rechazar documento"
                 (click)="actualizarEstadoGeneral(doc.idDocumentGeneral, 'RECHAZADO')"
               >
                 ❌
@@ -158,10 +161,10 @@
     <table class="custom-table">
       <thead>
         <tr>
-          <th>Archivo</th>
-          <th>Estado</th>
-          <th>Observación</th>
-          <th>Acciones</th>
+          <th scope="col">Archivo</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Observación</th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -178,12 +181,13 @@
             </td>
             <td>{{ doc.observations || '—' }}</td>
             <td class="actions">
-              <button class="icon-btn" title="Descargar" (click)="descargarEntrada(doc)">
+              <button class="icon-btn" title="Descargar" aria-label="Descargar documento" (click)="descargarEntrada(doc)">
                 ⬇️
               </button>
               <button
                 class="icon-btn"
                 title="Aprobar"
+                aria-label="Aprobar documento"
                 (click)="actualizarEstadoEntrada(doc.idDocumentEnter, 'APROBADO')"
               >
                 ✅
@@ -191,6 +195,7 @@
               <button
                 class="icon-btn"
                 title="Agregar observación"
+                aria-label="Agregar observación"
                 (click)="iniciarObservacion(doc.idDocumentEnter)"
               >
                 ✏️
@@ -198,6 +203,7 @@
               <button
                 class="icon-btn delete"
                 title="Rechazar"
+                aria-label="Rechazar documento"
                 (click)="actualizarEstadoEntrada(doc.idDocumentEnter, 'RECHAZADO')"
               >
                 ❌
@@ -283,9 +289,9 @@
     <table class="custom-table">
       <thead>
         <tr>
-          <th>Estado</th>
-          <th>Observación</th>
-          <th>Acciones</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Observación</th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -303,6 +309,7 @@
               <button
                 class="icon-btn"
                 title="Descargar"
+                aria-label="Descargar documento"
                 (click)="descargarRenuncia(documentoRenuncia()!.idDocumentResignation)"
               >
                 ⬇️
@@ -310,6 +317,7 @@
               <button
                 class="icon-btn"
                 title="Aprobar"
+                aria-label="Aprobar documento"
                 (click)="
                   actualizarEstadoRenuncia(documentoRenuncia()!.idDocumentResignation, 'APROBADO')
                 "
@@ -319,6 +327,7 @@
               <button
                 class="icon-btn"
                 title="Agregar observación"
+                aria-label="Agregar observación"
                 (click)="iniciarObservacion(documentoRenuncia()!.idDocumentResignation)"
               >
                 ✏️
@@ -326,6 +335,7 @@
               <button
                 class="icon-btn delete"
                 title="Rechazar"
+                aria-label="Rechazar documento"
                 (click)="
                   actualizarEstadoRenuncia(documentoRenuncia()!.idDocumentResignation, 'RECHAZADO')
                 "
