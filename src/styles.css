@@ -45,11 +45,13 @@
   padding: 24px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
+  overflow-x: auto; /* la tabla scrollea dentro de la tarjeta en pantallas angostas */
 }
 
 .custom-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 640px; /* evita que las columnas se aplasten; fuerza scroll en móvil */
 }
 .custom-table th,
 .custom-table td {
@@ -150,4 +152,19 @@
   display: flex;
   justify-content: space-between;
   margin-top: 40px;
+}
+
+/* ===== Responsive (móvil) para las páginas admin CRUD ===== */
+/* Mantiene el look de escritorio; solo adapta dimensiones en pantallas chicas. */
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 20px 16px;
+  }
+  .header {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .form-card {
+    padding: 24px;
+  }
 }

@@ -67,7 +67,7 @@ export class AdminEditarUsuarioComponent implements OnInit {
       next: (res) => {
         const u = res.data;
         if (u) {
-          this.idResidence = u.idResidence;
+          this.idResidence = u.idResidence ?? '';
           this.firstName = u.firstName;
           this.surName = u.surName;
           this.email = u.email;
