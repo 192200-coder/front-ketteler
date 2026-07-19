@@ -284,3 +284,71 @@
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
+
+/* Botón que abre la cámara: ocupa toda la caja como un botón real (accesibilidad) */
+.camera-open-btn {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
+/* Guía visual: óvalo para encuadrar el rostro */
+.face-guide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+}
+.face-oval {
+  width: 60%;
+  aspect-ratio: 3 / 4;
+  border: 3px dashed rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.35);
+}
+.face-guide-text {
+  margin-top: 1rem;
+  color: #fff;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Botón de captura manual */
+.btn-capture {
+  width: 100%;
+  padding: 0.9rem;
+  background: #1e8e3e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-capture:hover {
+  background: #167c33;
+}
+.btn-cancel-capture {
+  width: 100%;
+  padding: 0.7rem;
+  background: transparent;
+  color: #6c757d;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+}

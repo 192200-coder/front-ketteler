@@ -44,9 +44,10 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
   mensajeRed = signal<string | null>(null);
   mensajeRegistro = signal<string | null>(null);
   permisoCamaraDenegado = signal(false);
+  camaraActiva = signal(false); // cámara abierta en vivo, esperando captura manual
 
   private mediaStream: MediaStream | null = null;
-  private fotoCapturada: Blob | null = null;
+  private fotosCapturadas: Blob[] = [];
   private redActual: { ssid?: string; bssid?: string } | null = null;
 
   constructor(
@@ -117,11 +118,10 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
       });
   }
 
-  cuentaRegresiva = signal<number | null>(null);
-
   async startFacialScan() {
-    // 1. LEER valor del Signal con this.isScanning()
-    if (!this.esAppNativa || this.isScanning() || this.isFaceVerified) return;
+    if (!this.esAppNativa || this.camaraActiva() || this.isScanning() || this.isFaceVerified) return;
+
+    this.mensajeRegistro.set(null);
 
     const permiso = await Camera.checkPermissions();
     if (permiso.camera !== 'granted') {
@@ -154,23 +154,18 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // 2. ACTUALIZAR valor con .set(true)
-    this.isScanning.set(true);
-    this.cuentaRegresiva.set(5);
+    // Cámara abierta y en vivo. La captura la dispara el usuario con el botón,
+    // sin cuenta regresiva: se encuadra con calma y presiona "Capturar".
+    this.camaraActiva.set(true);
+    this.isScanning.set(false);
+  }
 
-    const intervalo = setInterval(() => {
-      const actual = this.cuentaRegresiva();
-      if (actual && actual > 1) {
-        this.cuentaRegresiva.set(actual - 1);
-      } else {
-        clearInterval(intervalo);
-        this.cuentaRegresiva.set(null);
-      }
-    }, 1000);
-
-    // Nota: El código original tenía un duplicado innecesario aquí. Lo mantengo actualizado con .set(true)
-    this.isScanning.set(true);
-    setTimeout(() => this.capturarFoto(), 3500);
+  // Disparado por el botón manual "Capturar": corre la ráfaga cuando el usuario está listo.
+  async capturarAhora() {
+    if (!this.camaraActiva()) return;
+    this.isScanning.set(true); // muestra "Procesando..." mientras corre la ráfaga
+    await this.capturarRafaga();
+    this.camaraActiva.set(false);
   }
 
   abrirAjustesCamara() {
@@ -182,7 +177,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
 
   fotoPreviewUrl = signal<string | null>(null);
 
-  private capturarFoto() {
+  private async capturarRafaga() {
     const video = this.videoPreview?.nativeElement;
     if (!video || video.videoWidth === 0) {
       this.mensajeRegistro.set('La cámara no entregó imagen a tiempo. Intenta de nuevo.');
@@ -190,29 +185,48 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+    this.fotosCapturadas = [];
+    const NUM_CAPTURAS = 3;
+    const INTERVALO_MS = 600; // ~1.8s total de ráfaga
 
-    canvas.toBlob(
-      (blob) => {
-        this.fotoCapturada = blob;
-        // 3. ACTUALIZAR valor con .set(false)
-        this.isScanning.set(false);
-        this.isFaceVerified = !!blob;
-        this.detenerCamara();
-
-        if (blob) {
+    for (let i = 0; i < NUM_CAPTURAS; i++) {
+      const blob = await this.capturarFrame(video);
+      if (blob) {
+        this.fotosCapturadas.push(blob);
+        // La primera captura sirve de preview
+        if (i === 0) {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.getContext('2d')?.drawImage(video, 0, 0, canvas.width, canvas.height);
           this.fotoPreviewUrl.set(canvas.toDataURL('image/jpeg', 0.9));
-        } else {
-          this.mensajeRegistro.set('No se pudo capturar la foto. Intenta de nuevo.');
         }
-      },
-      'image/jpeg',
-      0.9,
-    );
+      }
+      if (i < NUM_CAPTURAS - 1) {
+        await new Promise((r) => setTimeout(r, INTERVALO_MS));
+      }
+    }
+
+    this.isScanning.set(false);
+    this.detenerCamara();
+
+    if (this.fotosCapturadas.length === 0) {
+      this.isFaceVerified = false;
+      this.mensajeRegistro.set('No se pudieron capturar fotos. Intenta de nuevo.');
+    } else {
+      this.isFaceVerified = true;
+    }
+  }
+
+  private capturarFrame(video: HTMLVideoElement): Promise<Blob | null> {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.9);
+    });
   }
 
   private detenerCamara() {
@@ -220,20 +234,23 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
     this.mediaStream = null;
   }
 
-  private cancelarEscaneo() {
-    // 4. ACTUALIZAR valor con .set(false)
+  // Público: se invoca desde el template (botón "Cancelar") y también internamente.
+  cancelarEscaneo() {
     this.isScanning.set(false);
+    this.camaraActiva.set(false);
     this.detenerCamara();
   }
 
   registerExit() {
     const userId = this.authService.currentUser()?.userId;
-    if (!userId || !this.fotoCapturada) return;
+    if (!userId || this.fotosCapturadas.length === 0) return;
 
     const formData = new FormData();
     formData.append('idUser', userId);
     formData.append('description', this.motivoFinal);
-    formData.append('file', this.fotoCapturada, 'asistencia.jpg');
+    this.fotosCapturadas.forEach((foto, i) => {
+      formData.append('files', foto, `asistencia_${i}.jpg`);
+    });
     if (this.redActual?.ssid) formData.append('ssid', this.redActual.ssid);
     if (this.redActual?.bssid) formData.append('bssid', this.redActual.bssid);
 
@@ -256,7 +273,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
             `Registro exitoso (${res.similarity.toFixed(0)}% de coincidencia).`,
           );
           this.isFaceVerified = false;
-          this.fotoCapturada = null;
+          this.fotosCapturadas = [];
           this.selectedMotive = '';
           this.otroMotivoTexto = '';
         } else {
@@ -264,7 +281,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
             res.error ?? 'No se pudo verificar tu identidad. Intenta nuevamente.',
           );
           this.isFaceVerified = false;
-          this.fotoCapturada = null;
+          this.fotosCapturadas = [];
         }
       },
       error: (err: HttpErrorResponse) => {
@@ -275,7 +292,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
           'No se pudo conectar con el servidor. Intenta nuevamente.';
         this.mensajeRegistro.set(mensaje);
         this.isFaceVerified = false;
-        this.fotoCapturada = null;
+        this.fotosCapturadas = [];
       },
     });
   }

@@ -49,7 +49,6 @@
   <section class="main-card">
     <div
       class="camera-box"
-      (click)="startFacialScan()"
       [class.scanning]="isScanning()"
       [class.verified]="isFaceVerified"
     >
@@ -58,7 +57,7 @@
         autoplay
         playsinline
         muted
-        [style.display]="isScanning() ? 'block' : 'none'"
+        [style.display]="camaraActiva() || isScanning() ? 'block' : 'none'"
         style="
           position: absolute;
           inset: 0;
@@ -70,28 +69,59 @@
         "
       ></video>
 
-      @if (fotoPreviewUrl() && isFaceVerified) {
-        <img [src]="fotoPreviewUrl()" class="camera-feed visible" alt="Foto capturada" />
+      <!-- Guía visual: óvalo para encuadrar el rostro (solo visual, no valida) -->
+      @if (camaraActiva() && !isScanning()) {
+        <div class="face-guide" aria-hidden="true">
+          <div class="face-oval"></div>
+          <p class="face-guide-text">Centra tu rostro en el óvalo</p>
+        </div>
       }
 
-      @if (!isScanning() && !isFaceVerified) {
-        <i class="fa-solid fa-camera camera-icon"></i>
-        <p class="camera-text">Toca para validación facial</p>
+      @if (fotoPreviewUrl() && isFaceVerified) {
+        <img
+          [src]="fotoPreviewUrl()"
+          class="camera-feed visible"
+          alt="Foto capturada del rostro para validación"
+        />
+      }
+
+      @if (!camaraActiva() && !isScanning() && !isFaceVerified) {
+        <button
+          type="button"
+          class="camera-open-btn"
+          (click)="startFacialScan()"
+          aria-label="Abrir cámara para validación facial"
+        >
+          <i class="fa-solid fa-camera camera-icon" aria-hidden="true"></i>
+          <span class="camera-text">Toca para abrir la cámara</span>
+        </button>
       }
 
       @if (isScanning()) {
-        <div class="scanner-line"></div>
-        @if (cuentaRegresiva()) {
-          <p class="camera-countdown">{{ cuentaRegresiva() }}</p>
-        }
-        <p class="camera-text scanning-label">Escaneando rostro...</p>
+        <div class="scanner-line" aria-hidden="true"></div>
+        <p class="camera-text scanning-label" role="status">Procesando rostro...</p>
       }
 
       @if (isFaceVerified) {
-        <i class="fa-solid fa-circle-check camera-icon success-icon"></i>
-        <p class="camera-text status-ok">Rostro capturado, listo para registrar</p>
+        <i class="fa-solid fa-circle-check camera-icon success-icon" aria-hidden="true"></i>
+        <p class="camera-text status-ok" role="status">Rostro capturado, listo para registrar</p>
       }
     </div>
+
+    <!-- Captura manual: solo con cámara abierta y sin ráfaga en curso -->
+    @if (camaraActiva() && !isScanning()) {
+      <button
+        type="button"
+        class="btn-capture"
+        (click)="capturarAhora()"
+        aria-label="Capturar foto ahora"
+      >
+        <i class="fa-solid fa-camera" aria-hidden="true"></i> Capturar
+      </button>
+      <button type="button" class="btn-cancel-capture" (click)="cancelarEscaneo()">
+        Cancelar
+      </button>
+    }
 
     <div class="input-group">
       <select id="motivoSalida" [(ngModel)]="selectedMotive" class="select-motive">
