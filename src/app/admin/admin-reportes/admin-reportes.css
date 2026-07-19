@@ -10,6 +10,14 @@
   display: flex;
   gap: 20px;
   align-items: flex-end;
+  flex-wrap: wrap; /* los filtros bajan de línea en pantallas angostas */
+}
+
+@media (max-width: 768px) {
+  .filter-card {
+    flex-direction: column;
+    align-items: stretch; /* cada filtro ocupa el ancho completo en móvil */
+  }
 }
 
 .filter-group {
@@ -34,9 +42,9 @@
   background-color: #e0e0e0;
   border-radius: 6px;
   cursor: pointer;
-  color: white;
+  color: #333; /* antes 'white' -> era casi invisible sobre el gris claro */
 }
-.btn-tab.active { background-color: #007bff; }
+.btn-tab.active { background-color: #007bff; color: #fff; }
 
 .date-input {
   padding: 9px 12px;

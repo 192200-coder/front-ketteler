@@ -20,11 +20,11 @@
     <table class="custom-table">
       <thead>
         <tr>
-          <th>Nombre</th>
-          <th>Usuario</th>
-          <th>Rol</th>
-          <th>Estado</th>
-          <th>Acciones</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Usuario</th>
+          <th scope="col">Rol</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -46,12 +46,18 @@
                 </span>
               </td>
               <td class="actions">
-                <button class="icon-btn edit" title="Editar" (click)="editarUsuario(user.idUser)">
+                <button
+                  class="icon-btn edit"
+                  title="Editar"
+                  aria-label="Editar usuario"
+                  (click)="editarUsuario(user.idUser)"
+                >
                   📝
                 </button>
                 <button
                   class="icon-btn delete"
                   title="Eliminar"
+                  aria-label="Eliminar usuario"
                   (click)="eliminarUsuario(user.idUser)"
                 >
                   🗑️
@@ -59,6 +65,7 @@
                 <button
                   class="icon-btn"
                   title="Restablecer contraseña"
+                  aria-label="Restablecer contraseña"
                   (click)="resetearPassword(user.idUser, user.firstName + ' ' + user.surName)"
                 >
                   🔑
@@ -66,6 +73,7 @@
                 <button
                   class="icon-btn"
                   title="Ver documentos"
+                  aria-label="Ver documentos"
                   (click)="verDocumentos(user.idUser)"
                 >
                   📄
@@ -73,6 +81,7 @@
                 <button
                   class="icon-btn"
                   title="Subir documento de entrada"
+                  aria-label="Subir documento de entrada"
                   (click)="fileInputEntrada.click()"
                 >
                   📥

@@ -49,15 +49,16 @@
           <option [value]="u.idUser">{{ u.firstName }} {{ u.surName }}</option>
         }
       </select>
-      <div class="filter-group">
-        <label>Tipo de evento</label>
-        <select class="date-input" [(ngModel)]="tipoFiltro" (change)="onTipoCambio()">
-          <option value="">Todos</option>
-          <option value="ENTRADA">Entradas</option>
-          <option value="SALIDA">Salidas</option>
-          <option value="INTENTO_FALLIDO">Intentos fallidos</option>
-        </select>
-      </div>
+    </div>
+
+    <div class="filter-group">
+      <label>Tipo de evento</label>
+      <select class="date-input" [(ngModel)]="tipoFiltro" (change)="onTipoCambio()">
+        <option value="">Todos</option>
+        <option value="ENTRADA">Entradas</option>
+        <option value="SALIDA">Salidas</option>
+        <option value="INTENTO_FALLIDO">Intentos fallidos</option>
+      </select>
     </div>
 
     <div class="filter-group">
@@ -91,11 +92,11 @@
     <table class="custom-table">
       <thead>
         <tr>
-          <th>Residente</th>
-          <th>Fecha y hora</th>
-          <th>Tipo</th>
-          <th>Similitud</th>
-          <th>Detalle</th>
+          <th scope="col">Residente</th>
+          <th scope="col">Fecha y hora</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Similitud</th>
+          <th scope="col">Detalle</th>
         </tr>
       </thead>
       <tbody>

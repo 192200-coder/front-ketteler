@@ -3,7 +3,7 @@
 
 
 .btn-primary {
-  background-color: #00c4cc;
+  background-color: #2e3b9e; /* navy: coherente con crear/editar/login y pasa contraste (antes cian #00c4cc fallaba AA) */
   color: white;
   border: none;
   padding: 10px 20px;
