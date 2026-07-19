@@ -1,1 +1,5 @@
-export const API_BASE_URL = 'http://192.168.101.3:8001/casaketteler';
+import { environment } from '../../../environments/environment';
+
+// La URL del backend viene del entorno activo (dev vs prod).
+// Ver src/environments/environment.ts y environment.prod.ts.
+export const API_BASE_URL = environment.apiBaseUrl;
