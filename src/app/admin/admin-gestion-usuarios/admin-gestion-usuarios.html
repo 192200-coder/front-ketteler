@@ -29,9 +29,15 @@
       </thead>
       <tbody>
         @if (cargando()) {
-          <tr>
-            <td colspan="5">Cargando usuarios...</td>
-          </tr>
+          @for (row of [1, 2, 3, 4, 5]; track row) {
+            <tr aria-hidden="true">
+              <td><span class="skeleton sk-line lg"></span></td>
+              <td><span class="skeleton sk-line md"></span></td>
+              <td><span class="skeleton sk-line sm"></span></td>
+              <td><span class="skeleton sk-line sm"></span></td>
+              <td><span class="skeleton sk-line md"></span></td>
+            </tr>
+          }
         } @else {
           @for (user of usuarios(); track user.idUser) {
             <tr>

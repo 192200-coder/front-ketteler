@@ -101,9 +101,15 @@
       </thead>
       <tbody>
         @if (cargando()) {
-          <tr>
-            <td colspan="5" style="text-align: center; padding: 2rem">Cargando...</td>
-          </tr>
+          @for (row of [1, 2, 3, 4, 5]; track row) {
+            <tr aria-hidden="true">
+              <td><span class="skeleton sk-line lg"></span></td>
+              <td><span class="skeleton sk-line md"></span></td>
+              <td><span class="skeleton sk-line sm"></span></td>
+              <td><span class="skeleton sk-line sm"></span></td>
+              <td><span class="skeleton sk-line md"></span></td>
+            </tr>
+          }
         } @else if (reportes().length === 0) {
           <tr>
             <td colspan="5" style="text-align: center; padding: 2rem">

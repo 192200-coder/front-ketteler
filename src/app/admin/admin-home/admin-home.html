@@ -19,7 +19,11 @@
     <div class="kpi-card">
       <div class="kpi-info">
         <span class="kpi-label">Total residentes</span>
-        <span class="kpi-value">{{ totalResidentes() }}</span>
+        @if (cargandoKpis()) {
+          <span class="skeleton sk-value" aria-hidden="true"></span>
+        } @else {
+          <span class="kpi-value">{{ totalResidentes() }}</span>
+        }
       </div>
       <i class="fa-solid fa-users kpi-icon"></i>
     </div>
@@ -27,7 +31,11 @@
     <div class="kpi-card">
       <div class="kpi-info">
         <span class="kpi-label">Presentes hoy</span>
-        <span class="kpi-value">{{ presentes() }}</span>
+        @if (cargandoKpis()) {
+          <span class="skeleton sk-value" aria-hidden="true"></span>
+        } @else {
+          <span class="kpi-value">{{ presentes() }}</span>
+        }
       </div>
       <i class="fa-solid fa-user-check kpi-icon"></i>
     </div>
@@ -35,7 +43,11 @@
     <div class="kpi-card">
       <div class="kpi-info">
         <span class="kpi-label">Ausentes hoy</span>
-        <span class="kpi-value">{{ ausentes() }}</span>
+        @if (cargandoKpis()) {
+          <span class="skeleton sk-value" aria-hidden="true"></span>
+        } @else {
+          <span class="kpi-value">{{ ausentes() }}</span>
+        }
       </div>
       <i class="fa-solid fa-user-minus kpi-icon"></i>
     </div>
@@ -45,7 +57,17 @@
     <section class="activity-section">
       <h2 class="section-title">Actividad reciente</h2>
       <div class="activity-list">
-        @for (act of actividades(); track act.hora) {
+        @if (cargandoActividades()) {
+          @for (row of [1, 2, 3, 4]; track row) {
+            <div class="activity-card" aria-hidden="true">
+              <div class="activity-user-details" style="flex: 1; gap: 0.5rem">
+                <span class="skeleton sk-line md"></span>
+                <span class="skeleton sk-line sm"></span>
+              </div>
+            </div>
+          }
+        } @else {
+          @for (act of actividades(); track act.hora) {
           <div class="activity-card">
             <div class="activity-user-details">
               <span class="user-name">{{ act.nombre }}</span>
@@ -53,12 +75,20 @@
                 class="action-type"
                 [class.type-in]="act.tipo === 'Entrada'"
                 [class.type-out]="act.tipo === 'Salida'"
+                [class.type-anomaly]="act.esAnomalia"
               >
                 {{ act.tipo }}
+                @if (act.esAnomalia) {
+                  <i class="fa-solid fa-triangle-exclamation anomaly-icon"></i>
+                }
               </span>
             </div>
             <span class="activity-time">{{ act.hora }}</span>
           </div>
+          }
+          @if (actividades().length === 0) {
+            <p style="color: #888; font-size: 0.9rem; padding: 0.5rem 0">Sin actividad reciente.</p>
+          }
         }
       </div>
     </section>

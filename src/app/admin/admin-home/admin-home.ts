@@ -26,7 +26,10 @@ export class AdminHomeComponent implements OnInit {
   presentes = signal(0);
   ausentes = signal(0);
 
-  actividades = signal<{ nombre: string; tipo: string; hora: string }[]>([]);
+  actividades = signal<{ nombre: string; tipo: string; hora: string; esAnomalia: boolean }[]>([]);
+
+  cargandoKpis = signal(true);
+  cargandoActividades = signal(true);
 
   constructor(
     private router: Router,
@@ -54,8 +57,9 @@ export class AdminHomeComponent implements OnInit {
         this.totalResidentes.set(res.totalResidentes ?? 0);
         this.presentes.set(res.presentes ?? 0);
         this.ausentes.set(res.ausentes ?? 0);
+        this.cargandoKpis.set(false);
       },
-      error: () => {},
+      error: () => this.cargandoKpis.set(false),
     });
   }
 
@@ -67,18 +71,35 @@ export class AdminHomeComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.actividades.set(
-            (res.data?.content ?? []).map((r) => ({
-              nombre: r.firstName ? `${r.firstName} ${r.surName}` : 'Desconocido',
-              tipo: r.entryDate && !r.departureDate ? 'Entrada' : 'Salida',
-              hora: new Date(r.entryDate ?? r.departureDate).toLocaleTimeString('es-PE', {
-                hour: '2-digit',
-                minute: '2-digit',
-              }),
+            (res.data?.content ?? []).map((ev) => ({
+              nombre: ev.firstName ? `${ev.firstName} ${ev.surName}` : 'Desconocido',
+              tipo: this.etiquetaTipo(ev.eventType),
+              esAnomalia: ev.esAnomalia ?? false,
+              hora: ev.eventTimestamp
+                ? new Date(ev.eventTimestamp).toLocaleTimeString('es-PE', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })
+                : '--:--',
             })),
           );
+          this.cargandoActividades.set(false);
         },
-        error: () => {},
+        error: () => this.cargandoActividades.set(false),
       });
+  }
+
+  private etiquetaTipo(tipo: string): string {
+    switch (tipo) {
+      case 'ENTRADA':
+        return 'Entrada';
+      case 'SALIDA':
+        return 'Salida';
+      case 'INTENTO_FALLIDO':
+        return 'Intento fallido';
+      default:
+        return tipo ?? '—';
+    }
   }
 
   goToGestionarUsuarios() {

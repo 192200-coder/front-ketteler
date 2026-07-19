@@ -4,7 +4,6 @@
   background-color: #fafafa;
   padding: 2.5rem 4rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-sizing: border-box;
   max-width: 1400px;
   margin: 0 auto;
   box-sizing: border-box;
@@ -110,10 +109,38 @@
   font-weight: 600;
   color: #333;
 }
+
+/* Estados de la acción (Entrada, Salida, Anomalía) */
 .action-type {
   font-size: 0.75rem;
   color: #888;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Espacio entre el texto y el ícono */
 }
+.action-type.type-in {
+  color: #2e7d32; /* Verde disciplinado para entradas exitosas */
+}
+.action-type.type-out {
+  color: #1565c0; /* Azul para salidas estándar */
+}
+.action-type.type-anomaly {
+  color: #d93025 !important; /* Rojo de alerta para faltas/intentos fallidos */
+}
+
+/* Animación sutil para el ícono de peligro */
+.anomaly-icon {
+  font-size: 0.85rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
 .activity-time {
   font-size: 0.85rem;
   color: #666;
@@ -127,10 +154,10 @@
   gap: 1.2rem;
 }
 
-/* Botón Menta/Verde Claro del mockup */
+/* Botón Menta/Verde Claro */
 .btn-action-green {
   width: 100%;
-  background-color: #a3e4d7; /* Verde claro */
+  background-color: #a3e4d7;
   border: none;
   border-radius: 12px;
   padding: 1.2rem 2rem;
@@ -141,9 +168,7 @@
   font-weight: 600;
   color: #117a65;
   cursor: pointer;
-  transition:
-    transform 0.2s,
-    background-color 0.2s;
+  transition: transform 0.2s, background-color 0.2s;
 }
 .btn-action-green:hover {
   background-color: #76d7c4;
@@ -153,10 +178,10 @@
   font-size: 1.4rem;
 }
 
-/* Botón Lila/Lavanda del mockup */
+/* Botón Lila/Lavanda */
 .btn-action-purple {
   width: 100%;
-  background-color: #e8daef; /* Lavanda claro */
+  background-color: #e8daef;
   border: none;
   border-radius: 12px;
   padding: 1.2rem 2rem;
@@ -167,9 +192,7 @@
   font-weight: 600;
   color: #6c3483;
   cursor: pointer;
-  transition:
-    transform 0.2s,
-    background-color 0.2s;
+  transition: transform 0.2s, background-color 0.2s;
 }
 .btn-action-purple:hover {
   background-color: #d2b4de;
@@ -179,7 +202,7 @@
   font-size: 1.4rem;
 }
 
-/* Ajuste Responsivo básico por si reducen la pantalla */
+/* Ajustes Responsivos */
 @media (max-width: 1100px) {
   .kpi-grid {
     grid-template-columns: repeat(2, 1fr);
