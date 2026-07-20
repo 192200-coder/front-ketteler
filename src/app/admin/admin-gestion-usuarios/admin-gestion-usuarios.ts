@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from '../../core/config/api.config';
@@ -17,7 +18,7 @@ interface UsuarioApi {
 @Component({
   selector: 'app-admin-gestion-usuarios',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './admin-gestion-usuarios.html',
   styleUrls: ['./admin-gestion-usuarios.css'],
 })
@@ -25,6 +26,17 @@ export class AdminGestionUsuariosComponent implements OnInit {
   usuarios = signal<UsuarioApi[]>([]);
   cargando = signal(false);
   mensaje = signal<string | null>(null);
+
+  // Búsqueda por nombre, apellido o correo
+  filtro = signal('');
+
+  usuariosFiltrados = computed(() => {
+    const q = this.filtro().trim().toLowerCase();
+    if (!q) return this.usuarios();
+    return this.usuarios().filter((u) =>
+      `${u.firstName ?? ''} ${u.surName ?? ''} ${u.email ?? ''}`.toLowerCase().includes(q),
+    );
+  });
 
   // Modal de contraseña reseteada
   passwordReseteada = signal<string | null>(null);

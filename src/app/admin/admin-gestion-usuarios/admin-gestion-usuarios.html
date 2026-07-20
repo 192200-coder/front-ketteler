@@ -1,6 +1,7 @@
 <div class="admin-container">
   <div class="header">
     <div class="title-section">
+      <button class="btn-back" routerLink="/admin-home">&lt; Atrás</button>
       <h2>Gestión de usuarios</h2>
       <p>Administra las cuentas de residentes</p>
     </div>
@@ -13,8 +14,15 @@
 
   <div class="table-card">
     <div class="search-bar">
-      <span>🔍</span>
-      <input type="text" placeholder="Buscar por nombre o usuario" />
+      <span aria-hidden="true">🔍</span>
+      <label for="buscarUsuario" class="sr-only">Buscar usuario</label>
+      <input
+        id="buscarUsuario"
+        type="text"
+        placeholder="Buscar por nombre o correo"
+        [ngModel]="filtro()"
+        (ngModelChange)="filtro.set($event)"
+      />
     </div>
 
     <table class="custom-table">
@@ -38,8 +46,18 @@
               <td><span class="skeleton sk-line md"></span></td>
             </tr>
           }
+        } @else if (usuariosFiltrados().length === 0) {
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 1.5rem; color: #6c757d">
+              @if (filtro().trim()) {
+                No se encontraron usuarios para «{{ filtro() }}».
+              } @else {
+                Aún no hay usuarios registrados.
+              }
+            </td>
+          </tr>
         } @else {
-          @for (user of usuarios(); track user.idUser) {
+          @for (user of usuariosFiltrados(); track user.idUser) {
             <tr>
               <td>{{ user.firstName }} {{ user.surName }}</td>
               <td>{{ user.email }}</td>
@@ -106,9 +124,6 @@
     </table>
   </div>
 
-  <div class="footer-actions">
-    <button class="btn-back" routerLink="/admin-home">&lt; Atrás</button>
-  </div>
   @if (passwordReseteada()) {
     <div
       style="

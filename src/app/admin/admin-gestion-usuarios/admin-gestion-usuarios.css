@@ -70,6 +70,13 @@
   font-size: 16px;
 }
 
+/* En el encabezado: queda sobre el título y siempre visible al entrar */
+.title-section .btn-back {
+  display: block;
+  padding: 0;
+  margin-bottom: 0.4rem;
+}
+
 .login-error {
   color: #d32f2f;
   background-color: #fdecea;
