@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from '../../core/config/api.config';
 import { FormsModule } from '@angular/forms';
+import { DescargaService } from '../../core/services/descarga.service';
 
 interface AttendanceEvent {
   idAtendance: string;
@@ -49,7 +50,10 @@ export class AdminReportesComponent implements OnInit {
   readonly tamanioPagina = 10;
   ordenDesc = signal(true);
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private descargaService: DescargaService,
+  ) {}
 
   ngOnInit() {
     this.cargarUsuarios();
@@ -146,21 +150,16 @@ export class AdminReportesComponent implements OnInit {
 
     const url = `${API_BASE_URL}/attendance/export?format=${formato}&${params.toString()}`;
     const extension = formato === 'excel' ? 'xlsx' : 'pdf';
-    const mimeType =
-      formato === 'excel'
-        ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        : 'application/pdf';
+    const nombrePorDefecto = `reporte-asistencia-${this.rango()}-${this.fechaSeleccionada}.${extension}`;
 
-    this.http.get(url, { responseType: 'blob' }).subscribe({
-      next: (blob) => {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `reporte-asistencia-${this.rango()}-${this.fechaSeleccionada}.${extension}`;
-        link.click();
-        URL.revokeObjectURL(link.href);
-      },
-      error: () => alert('No se pudo generar el reporte. Intenta nuevamente.'),
-    });
+    // Usa el servicio compartido: en móvil guarda el archivo con Filesystem y abre el
+    // Share nativo. Un <a download> no funciona dentro del WebView de Capacitor.
+    this.descargaService.descargar(
+      url,
+      nombrePorDefecto,
+      (mensaje) => alert(mensaje),
+      'No se pudo generar el reporte. Intenta nuevamente.',
+    );
   }
 
   onTipoCambio() {
