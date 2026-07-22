@@ -301,6 +301,10 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
     this.authService.logout();
   }
 
+  irAPerfil() {
+    this.router.navigate(['/residente-perfil']);
+  }
+
   navigateTo(view: string) {
     if (view === 'historial') this.router.navigate(['/residente-historial']);
     else if (view === 'documentos') this.router.navigate(['/residente-documentos']);

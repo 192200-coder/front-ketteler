@@ -1,0 +1,41 @@
+<main class="mobile-container perfil">
+  <header class="perfil-header">
+    <button class="btn-volver" (click)="volver()" aria-label="Volver al inicio">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <span class="brand-small">Casa Ketteler</span>
+  </header>
+
+  <section class="perfil-hero">
+    <!-- Espacio discreto reservado para la foto del residente (o logo). -->
+    <div class="avatar-placeholder" aria-hidden="true">
+      <i class="fa-solid fa-user"></i>
+    </div>
+    <h1 class="perfil-nombre">
+      {{ profileService.perfil()?.firstName || authService.currentUser()?.firstName }}
+      {{ profileService.perfil()?.surName }}
+    </h1>
+    <p class="perfil-rol">Residente</p>
+  </section>
+
+  <section class="perfil-datos">
+    <div class="dato-row">
+      <span class="dato-label"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Correo</span>
+      <span class="dato-valor">{{ profileService.perfil()?.email || '—' }}</span>
+    </div>
+    <div class="dato-row">
+      <span class="dato-label"><i class="fa-solid fa-phone" aria-hidden="true"></i> Teléfono</span>
+      <span class="dato-valor">{{ profileService.perfil()?.cellPhoneNumber || '—' }}</span>
+    </div>
+    <div class="dato-row">
+      <span class="dato-label"
+        ><i class="fa-solid fa-phone-volume" aria-hidden="true"></i> Emergencia</span
+      >
+      <span class="dato-valor">{{ profileService.perfil()?.cellPhoneEmergency || '—' }}</span>
+    </div>
+  </section>
+
+  <button class="btn-logout-perfil" (click)="logout()">
+    <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i> Cerrar sesión
+  </button>
+</main>

@@ -10,6 +10,8 @@ export interface PerfilUsuario {
   surName?: string;
   email?: string;
   idResidence?: string;
+  cellPhoneNumber?: string;
+  cellPhoneEmergency?: string;
   presente?: boolean;
 }
 

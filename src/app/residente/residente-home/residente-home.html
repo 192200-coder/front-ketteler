@@ -1,14 +1,23 @@
 <main class="mobile-container">
   <header class="header-actions">
     <span class="brand-small">Casa Ketteler</span>
-    <button class="btn-logout" (click)="logout()">
-      Cerrar sesión <i class="fa-solid fa-arrow-right-from-bracket"></i>
+    <button class="btn-perfil" (click)="irAPerfil()" aria-label="Ver mi perfil">
+      <i class="fa-solid fa-circle-user"></i>
     </button>
   </header>
 
   <section class="welcome-section">
-    <h1 class="welcome-title">Welcome, {{ authService.currentUser()?.firstName }}</h1>
-    <p class="welcome-subtitle">Registra tu asistencia y consulta tu historial</p>
+    <h1
+      class="welcome-title welcome-link"
+      role="button"
+      tabindex="0"
+      (click)="irAPerfil()"
+      (keyup.enter)="irAPerfil()"
+    >
+      Welcome, {{ authService.currentUser()?.firstName }}
+      <i class="fa-solid fa-chevron-right welcome-chevron" aria-hidden="true"></i>
+    </h1>
+    <p class="welcome-subtitle">Toca tu nombre para ver tu perfil</p>
   </section>
 
   @if (mensajeRed()) {

@@ -33,6 +33,15 @@
   cursor: pointer;
   font-size: 0.85rem;
 }
+.btn-perfil {
+  background: none;
+  border: none;
+  color: #17a2b8;
+  font-size: 1.7rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+}
 
 /* Seccion Bienvenida */
 .welcome-section {
@@ -43,6 +52,17 @@
   font-weight: 700;
   color: #111;
   margin-bottom: 0.3rem;
+}
+/* El titulo de bienvenida es tappable: lleva al perfil */
+.welcome-link {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.welcome-chevron {
+  font-size: 0.9rem;
+  color: #bbb;
 }
 .welcome-subtitle {
   color: #777;

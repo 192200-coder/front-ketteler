@@ -1,0 +1,134 @@
+/* Contenedor móvil (mismo patrón que el resto de pantallas de residente).
+   El box-sizing y el llenado en celular los aporta el styles.css global. */
+.mobile-container {
+  width: 100%;
+  max-width: 400px;
+  height: 100vh;
+  max-height: 850px;
+  background-color: #fcfbfe;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+}
+
+/* Header con volver + marca */
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+.btn-volver {
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  line-height: 1;
+}
+.brand-small {
+  color: #aaa;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Hero: avatar + nombre */
+.perfil-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.avatar-placeholder {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-color: #e8f6f7;
+  color: #17a2b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d5edef;
+}
+.perfil-nombre {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 0.2rem;
+}
+.perfil-rol {
+  color: #17a2b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Datos */
+.perfil-datos {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #eef0f2;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: auto;
+}
+.dato-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid #f2f4f6;
+}
+.dato-row:last-child {
+  border-bottom: none;
+}
+.dato-label {
+  color: #777;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+.dato-label i {
+  color: #17a2b8;
+}
+.dato-valor {
+  color: #222;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* Cerrar sesión */
+.btn-logout-perfil {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0.9rem;
+  background: transparent;
+  color: #e74c3c;
+  border: 1px solid #f2c9c4;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+.btn-logout-perfil:hover {
+  background-color: #fdECEA;
+}

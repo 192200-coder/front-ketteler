@@ -38,6 +38,14 @@ export const routes: Routes = [
             ),
         canActivate: [authGuard, roleGuard(['RESIDENTE'])],
     },
+    {
+        path: 'residente-perfil',
+        loadComponent: () =>
+            import('./residente/residente-perfil/residente-perfil').then(
+                (m) => m.ResidentePerfilComponent,
+            ),
+        canActivate: [authGuard, roleGuard(['RESIDENTE'])],
+    },
 
     {
         path: 'admin-home',
