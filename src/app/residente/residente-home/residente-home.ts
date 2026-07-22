@@ -10,6 +10,11 @@ import { API_BASE_URL } from '../../core/config/api.config';
 import { Camera } from '@capacitor/camera';
 import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
 
+interface RegistroEvento {
+  eventType: 'ENTRADA' | 'SALIDA' | 'INTENTO_FALLIDO';
+  eventTimestamp: string | null;
+}
+
 interface FaceVerificationResponse {
   type: string;
   listMessage: string[];
@@ -43,8 +48,15 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
   esAppNativa = false;
   mensajeRed = signal<string | null>(null);
   mensajeRegistro = signal<string | null>(null);
+  registroExitoso = signal(false); // true = último mensaje es de éxito (verde); false = error (rojo)
   permisoCamaraDenegado = signal(false);
   camaraActiva = signal(false); // cámara abierta en vivo, esperando captura manual
+
+  // Modo registro: cámara abierta / escaneando / foto lista. Se usa para compactar
+  // el home (ocultar logo y "Registro de hoy") y que todo calce en pantalla.
+  enModoRegistro(): boolean {
+    return this.camaraActiva() || this.isScanning() || this.isFaceVerified;
+  }
 
   private mediaStream: MediaStream | null = null;
   private fotosCapturadas: Blob[] = [];
@@ -69,6 +81,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
     this.profileService.cargarPerfil().subscribe({
       next: async () => {
         this.cargarProximaAccion();
+        this.cargarRegistroHoy();
         await this.verificarRed();
       },
     });
@@ -269,6 +282,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
             this.proximaAccion.set('entrada');
           }
 
+          this.registroExitoso.set(true);
           this.mensajeRegistro.set(
             `Registro exitoso (${res.similarity.toFixed(0)}% de coincidencia).`,
           );
@@ -277,6 +291,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
           this.selectedMotive = '';
           this.otroMotivoTexto = '';
         } else {
+          this.registroExitoso.set(false);
           this.mensajeRegistro.set(
             res.error ?? 'No se pudo verificar tu identidad. Intenta nuevamente.',
           );
@@ -290,6 +305,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
           body?.error ??
           body?.listMessage?.[0] ??
           'No se pudo conectar con el servidor. Intenta nuevamente.';
+        this.registroExitoso.set(false);
         this.mensajeRegistro.set(mensaje);
         this.isFaceVerified = false;
         this.fotosCapturadas = [];
@@ -303,6 +319,29 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
 
   irAPerfil() {
     this.router.navigate(['/residente-perfil']);
+  }
+
+  // "Registro Hoy": carga la última entrada y salida de HOY desde el backend, para que
+  // persista al reabrir la app y se renueve solo al día siguiente (siempre consulta hoy).
+  private cargarRegistroHoy() {
+    this.http.get<{ data: RegistroEvento[] }>(`${API_BASE_URL}/myattendance`).subscribe({
+      next: (res) => {
+        const hoy = new Date().toDateString();
+        // /myattendance viene ordenado desc (más reciente primero) → find() da el último de hoy.
+        const eventosHoy = (res.data ?? []).filter(
+          (e) => e.eventTimestamp && new Date(e.eventTimestamp).toDateString() === hoy,
+        );
+        const ultimaEntrada = eventosHoy.find((e) => e.eventType === 'ENTRADA');
+        const ultimaSalida = eventosHoy.find((e) => e.eventType === 'SALIDA');
+        if (ultimaEntrada?.eventTimestamp) this.entryTime = this.formatHora(ultimaEntrada.eventTimestamp);
+        if (ultimaSalida?.eventTimestamp) this.exitTime = this.formatHora(ultimaSalida.eventTimestamp);
+      },
+      error: () => {},
+    });
+  }
+
+  private formatHora(ts: string): string {
+    return new Date(ts).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
   }
 
   navigateTo(view: string) {

@@ -30,6 +30,18 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Mensaje de éxito (verde), para diferenciarlo de los errores (rojo) */
+.login-success {
+  color: #1e7f44;
+  background-color: #e6f4ea;
+  border: 1px solid #b7dfc4;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
 /* --- Sistema "admin-container" (páginas CRUD del admin) --- */
 .admin-container {
   padding: 40px;

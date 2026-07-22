@@ -68,6 +68,21 @@
   color: #777;
   font-size: 0.85rem;
 }
+/* Título + botón de perfil en la misma línea (perfil a la altura del Welcome) */
+.welcome-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+/* Mensaje de registro compacto: aunque el error sea largo, no deforma el calce */
+.mensaje-registro {
+  font-size: 0.78rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.6rem;
+  max-height: 4.2rem;
+  overflow-y: auto;
+}
 
 /* Badge de Wi-Fi Inteligente */
 .wifi-badge {

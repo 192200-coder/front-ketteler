@@ -1,22 +1,25 @@
 <main class="mobile-container">
-  <header class="header-actions">
-    <span class="brand-small">Casa Ketteler</span>
-    <button class="btn-perfil" (click)="irAPerfil()" aria-label="Ver mi perfil">
-      <i class="fa-solid fa-circle-user"></i>
-    </button>
-  </header>
+  @if (!enModoRegistro()) {
+    <header class="header-actions">
+      <span class="brand-small">Casa Ketteler</span>
+    </header>
+  }
 
   <section class="welcome-section">
-    <h1
-      class="welcome-title welcome-link"
-      role="button"
-      tabindex="0"
-      (click)="irAPerfil()"
-      (keyup.enter)="irAPerfil()"
-    >
-      Welcome, {{ authService.currentUser()?.firstName }}
-      <i class="fa-solid fa-chevron-right welcome-chevron" aria-hidden="true"></i>
-    </h1>
+    <div class="welcome-row">
+      <h1
+        class="welcome-title welcome-link"
+        role="button"
+        tabindex="0"
+        (click)="irAPerfil()"
+        (keyup.enter)="irAPerfil()"
+      >
+        Welcome, {{ authService.currentUser()?.firstName }}
+      </h1>
+      <button class="btn-perfil" (click)="irAPerfil()" aria-label="Ver mi perfil">
+        <i class="fa-solid fa-circle-user"></i>
+      </button>
+    </div>
     <p class="welcome-subtitle">Toca tu nombre para ver tu perfil</p>
   </section>
 
@@ -42,7 +45,14 @@
   </div>
 
   @if (mensajeRegistro()) {
-    <p class="login-error">{{ mensajeRegistro() }}</p>
+    <p
+      class="mensaje-registro"
+      [class.login-error]="!registroExitoso()"
+      [class.login-success]="registroExitoso()"
+      role="status"
+    >
+      {{ mensajeRegistro() }}
+    </p>
   }
 
   @if (permisoCamaraDenegado()) {
@@ -166,21 +176,25 @@
     </button>
   </section>
 
-  <section class="today-logs">
-    <h3 class="logs-title">Registro de hoy</h3>
-    <div class="logs-row">
-      <div class="log-box status-out">
-        <span class="log-label"><i class="fa-solid fa-person-walking-arrow-right"></i> Salida</span>
-        <span class="log-time">{{ exitTime }}</span>
+  @if (!enModoRegistro()) {
+    <section class="today-logs">
+      <h3 class="logs-title">Registro de hoy</h3>
+      <div class="logs-row">
+        <div class="log-box status-out">
+          <span class="log-label"
+            ><i class="fa-solid fa-person-walking-arrow-right"></i> Salida</span
+          >
+          <span class="log-time">{{ exitTime }}</span>
+        </div>
+        <div class="log-box status-in">
+          <span class="log-label"
+            ><i class="fa-solid fa-person-walking-arrow-loop-left"></i> Entrada</span
+          >
+          <span class="log-time">{{ entryTime }}</span>
+        </div>
       </div>
-      <div class="log-box status-in">
-        <span class="log-label"
-          ><i class="fa-solid fa-person-walking-arrow-loop-left"></i> Entrada</span
-        >
-        <span class="log-time">{{ entryTime }}</span>
-      </div>
-    </div>
-  </section>
+    </section>
+  }
 
   <nav class="bottom-nav">
     <button class="nav-item" (click)="navigateTo('historial')">
