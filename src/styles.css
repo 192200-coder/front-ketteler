@@ -227,3 +227,18 @@
   height: 1.9rem;
   border-radius: 8px;
 }
+
+/* ===== App móvil: que el contenedor llene la pantalla ===== */
+/* .mobile-container se define por componente (login + pantallas de residente) con
+   topes max-width:400px / max-height:850px pensados para la tarjeta centrada del
+   navegador de escritorio. En un celular esos topes dejan la caja flotando con
+   márgenes ("no calza"). En pantallas de celular quitamos los topes para que ocupe
+   todo el alto y ancho. Se usa !important para ganarle, desde un único lugar, a los
+   estilos con scope del componente. */
+@media (max-width: 480px) {
+  .mobile-container {
+    max-width: none !important;
+    max-height: none !important;
+    overflow-y: auto;
+  }
+}
