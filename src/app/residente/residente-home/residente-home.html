@@ -141,7 +141,14 @@
 
     <div class="input-group">
       <select id="motivoSalida" [(ngModel)]="selectedMotive" class="select-motive">
-        <option value="" disabled selected>Ingresa el motivo de salida</option>
+        <!-- Al ENTRAR el motivo es opcional (se asume el retorno); al SALIR es obligatorio. -->
+        <option value="" [disabled]="proximaAccion() === 'salida'" selected>
+          {{
+            proximaAccion() === 'entrada'
+              ? 'Motivo (opcional)'
+              : 'Ingresa el motivo de salida'
+          }}
+        </option>
         <option value="clases">Asistencia a Clases Universitarias</option>
         <option value="medico">Cita Médica / Salud</option>
         <option value="trabajo">Jornada Laboral / Prácticas</option>
@@ -164,7 +171,7 @@
       [disabled]="
         !isCorrectWifi() ||
         !isFaceVerified ||
-        !selectedMotive ||
+        (proximaAccion() === 'salida' && !selectedMotive) ||
         (selectedMotive === 'otros' && !otroMotivoTexto.trim())
       "
       (click)="registerExit()"

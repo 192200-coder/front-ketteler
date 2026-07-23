@@ -361,6 +361,14 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
     else if (view === 'documentos') this.router.navigate(['/residente-documentos']);
   }
   get motivoFinal(): string {
-    return this.selectedMotive === 'otros' ? this.otroMotivoTexto.trim() : this.selectedMotive;
+    if (this.selectedMotive === 'otros') {
+      return this.otroMotivoTexto.trim();
+    }
+    // Al entrar el motivo es opcional: si no eligió ninguno, se asume el retorno.
+    // (Si sí eligió uno, se respeta lo que puso.)
+    if (!this.selectedMotive && this.proximaAccion() === 'entrada') {
+      return 'Retorno a la residencia';
+    }
+    return this.selectedMotive;
   }
 }
