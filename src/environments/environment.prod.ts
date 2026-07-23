@@ -3,5 +3,7 @@
 // (usar http:// haría que el navegador bloquee las peticiones por "mixed content" en un sitio HTTPS).
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://REEMPLAZAR-CON-BACKEND-DE-PRODUCCION/casaketteler',
+  apiBaseUrl: 'http://192.168.101.3:8001/casaketteler',
 };
+
+//apiBaseUrl: 'https://REEMPLAZAR-CON-BACKEND-DE-PRODUCCION/casaketteler'

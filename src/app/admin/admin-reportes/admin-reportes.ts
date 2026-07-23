@@ -31,7 +31,7 @@ type RangoReporte = 'diario' | 'semanal' | 'mensual';
  * No se usa toISOString() porque convierte a UTC: en Perú (UTC-5), a partir de las
  * 19:00 devolvía el día siguiente, y el reporte "diario" consultaba mañana -> vacío.
  */
-function fechaLocalISO(d: Date): string {
+export function fechaLocalISO(d: Date): string {
   const mes = String(d.getMonth() + 1).padStart(2, '0');
   const dia = String(d.getDate()).padStart(2, '0');
   return `${d.getFullYear()}-${mes}-${dia}`;
