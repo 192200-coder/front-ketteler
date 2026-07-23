@@ -1,59 +1,105 @@
-# FrontKetteler
+# Casa Ketteler — Interfaz (web y app móvil)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.15.
+Frontend del sistema de control de asistencia de la residencia universitaria
+Casa Ketteler. Un mismo proyecto Angular produce dos cosas:
 
-## Development server
+- La **interfaz web** de administración (la publica el backend).
+- La **app Android** para los residentes, empaquetada con Capacitor.
 
-To start a local development server, run:
+> 📖 **La documentación completa está en el repositorio del backend**: instalación,
+> despliegue, operación y arquitectura.
 
-```bash
-ng serve
+---
+
+## Requisitos
+
+- Node.js 20 o superior
+- El **backend en ejecución** (sin él no hay datos)
+- Android Studio, solo si vas a generar el APK
+
+---
+
+## Puesta en marcha
+
+```powershell
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Antes de arrancar, indica dónde está el backend en
+`src/environments/environment.ts`:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```typescript
+export const environment = {
+  production: false,
+  apiBaseUrl: 'http://192.168.1.100:8001/casaketteler',  // ← IP de tu PC
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+> Se usa la **IP de la red y no `localhost`** porque el celular necesita alcanzar tu
+> computadora. Averíguala con `ipconfig`. Esa IP también debe figurar en
+> `CORS_ALLOWED_ORIGINS` del `.env` del backend.
 
-```bash
-ng generate --help
+---
+
+## Comandos
+
+```powershell
+npx ng serve                  # desarrollo en http://localhost:4200
+npx ng build                  # compila a dist/front-ketteler/browser
+npx ng test --watch=false     # ejecuta las 16 pruebas
+npm run ship:android          # compila e instala la app en un celular conectado
 ```
 
-## Building
+**APK firmado para repartir:**
 
-To build the project run:
-
-```bash
-ng build
+```powershell
+npm run build:android
+npx cap sync android
+cd android
+.\gradlew.bat assembleRelease
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Queda en `android/app/build/outputs/apk/release/app-release.apk`.
 
-## Running unit tests
+---
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Entornos
 
-```bash
-ng test
+| Archivo | Se usa en | Contiene |
+|---------|-----------|----------|
+| `environment.ts` | `ng serve` | URL del backend en desarrollo |
+| `environment.prod.ts` | `ng build` | URL del backend en producción |
+
+El intercambio es automático (`fileReplacements` en `angular.json`).
+
+> ⚠️ Al desplegar, `environment.prod.ts` debe apuntar al servidor real.
+
+---
+
+## Organización
+
+```
+src/app/
+├── admin/       → pantallas de administración
+├── residente/   → pantallas del residente
+├── auth/        → inicio de sesión
+└── core/
+    ├── services/      → autenticación, perfil, descargas, red
+    ├── guards/        → protección de rutas por rol
+    ├── interceptors/  → token de sesión y tiempo de espera
+    └── utils/         → almacenamiento de sesión y utilidades
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## Detalles a tener en cuenta
 
-```bash
-ng e2e
-```
+**Las descargas en móvil son distintas.** Dentro de la app no existe el gestor de
+descargas del navegador: hay que usar `DescargaService`, que guarda el archivo y abre
+el menú de compartir del sistema. Un `<a download>` no funciona.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+**Las pantallas del residente solo operan en la app.** Necesitan cámara y datos de
+Wi-Fi; en un navegador de escritorio muestran un aviso.
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Sesión según el rol.** El residente permanece con la sesión iniciada (su celular es
+personal); la administración no (la computadora es compartida).
