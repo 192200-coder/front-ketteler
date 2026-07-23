@@ -14,6 +14,7 @@ interface DocumentoItem {
   idDocumentResignation?: string;
   type?: string;
   nameDocumentGeneral?: string;
+  formatFileName?: string; // formato en blanco asignado por el admin (renuncia)
   status: string;
   observations?: string;
   downloadable: boolean;

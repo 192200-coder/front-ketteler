@@ -250,12 +250,25 @@
       "
     >
       <h3>Carta de renuncia</h3>
-      @if (!documentoRenuncia()) {
-        <button class="btn-action" (click)="toggleFormRenuncia()">
-          {{ mostrarFormRenuncia() ? 'Cancelar' : '+ Asignar formato' }}
-        </button>
-      }
+      <!-- El botón debe estar SIEMPRE disponible: asignar el formato crea/actualiza el
+           registro de renuncia, así que condicionarlo a "no exista registro" lo hacía
+           desaparecer tras el primer uso (y nunca aparecía si el residente ya tenía uno). -->
+      <button class="btn-action" (click)="toggleFormRenuncia()">
+        {{
+          mostrarFormRenuncia()
+            ? 'Cancelar'
+            : formatoAsignado()
+              ? 'Reemplazar formato'
+              : '+ Asignar formato'
+        }}
+      </button>
     </div>
+
+    @if (formatoAsignado() && !mostrarFormRenuncia()) {
+      <p style="padding: 0 1rem; font-size: 0.85rem; color: #1e7f44">
+        ✓ Formato asignado — el residente ya puede descargarlo.
+      </p>
+    }
 
     @if (mostrarFormRenuncia()) {
       <div style="padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem">

@@ -72,7 +72,10 @@
           </p>
         }
 
-        @if (miRenuncia() && miRenuncia()!.status === 'PENDIENTE') {
+        <!-- Se muestra cuando el admin asignó un formato (no depende del estado):
+             antes se condicionaba a status==='PENDIENTE', lo que ocultaba la descarga
+             aunque el formato existiera. -->
+        @if (miRenuncia()?.formatFileName) {
           <button
             class="btn-upload-doc"
             style="margin-bottom: 1rem; background: #196f3d"

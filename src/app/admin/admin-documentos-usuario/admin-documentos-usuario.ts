@@ -19,7 +19,8 @@ interface DocumentoGeneral {
 
 interface DocumentoRenuncia {
   idDocumentResignation: string;
-  nameDocumentResignation?: string;
+  nameDocumentResignation?: string; // carta firmada que subió el residente
+  formatFileName?: string; // formato en blanco que asignó el admin
   status: string;
   observations?: string;
 }
@@ -46,6 +47,11 @@ export class AdminDocumentosUsuarioComponent implements OnInit {
   idUser = '';
   documentosGenerales = signal<DocumentoGeneral[]>([]);
   documentoRenuncia = signal<DocumentoRenuncia | null>(null);
+
+  // ¿Ya se le asignó un formato en blanco al residente? (para el texto del botón)
+  formatoAsignado(): boolean {
+    return !!this.documentoRenuncia()?.formatFileName;
+  }
   cargando = signal(false);
   mensaje = signal<string | null>(null);
 
