@@ -26,6 +26,17 @@ interface UsuarioFiltro {
 
 type RangoReporte = 'diario' | 'semanal' | 'mensual';
 
+/**
+ * Formatea una fecha como YYYY-MM-DD usando la hora LOCAL.
+ * No se usa toISOString() porque convierte a UTC: en Perú (UTC-5), a partir de las
+ * 19:00 devolvía el día siguiente, y el reporte "diario" consultaba mañana -> vacío.
+ */
+function fechaLocalISO(d: Date): string {
+  const mes = String(d.getMonth() + 1).padStart(2, '0');
+  const dia = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${mes}-${dia}`;
+}
+
 @Component({
   selector: 'app-admin-reportes',
   standalone: true,
@@ -35,7 +46,7 @@ type RangoReporte = 'diario' | 'semanal' | 'mensual';
 })
 export class AdminReportesComponent implements OnInit {
   rango = signal<RangoReporte>('diario');
-  fechaSeleccionada = new Date().toISOString().split('T')[0];
+  fechaSeleccionada = fechaLocalISO(new Date());
   reportes = signal<AttendanceEvent[]>([]);
   cargando = signal(false);
 
@@ -95,7 +106,9 @@ export class AdminReportesComponent implements OnInit {
   }
 
   private calcularRangoFechas(): { fechaInicio: string; fechaFin: string } {
-    const base = new Date(this.fechaSeleccionada);
+    // Se agrega la hora para que se interprete como medianoche LOCAL.
+    // (new Date('2026-07-23') sola se interpreta como UTC y corre el día.)
+    const base = new Date(this.fechaSeleccionada + 'T00:00:00');
     const fin = new Date(base);
 
     if (this.rango() === 'semanal') {
@@ -106,8 +119,8 @@ export class AdminReportesComponent implements OnInit {
     }
 
     return {
-      fechaInicio: base.toISOString().split('T')[0],
-      fechaFin: fin.toISOString().split('T')[0],
+      fechaInicio: fechaLocalISO(base),
+      fechaFin: fechaLocalISO(fin),
     };
   }
 
