@@ -39,8 +39,12 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${API_BASE_URL}/login`, { email, password }).pipe(
       tap((response) => {
         if (response.type === 'success' && response.token) {
-          safeSetItem(TOKEN_KEY, response.token);
-          safeSetItem(USER_KEY, JSON.stringify(response));
+          // El residente usa su propio celular -> sesión persistente (auto-login).
+          // El admin usa un terminal compartido -> la sesión muere al cerrar el
+          // navegador, así debe ingresar su contraseña de nuevo (requisito de seguridad).
+          const sesionPersistente = response.role === 'RESIDENTE';
+          safeSetItem(TOKEN_KEY, response.token, sesionPersistente);
+          safeSetItem(USER_KEY, JSON.stringify(response), sesionPersistente);
           this.currentUser.set(response);
           this.lastPasswordUsed = password;
         }

@@ -25,13 +25,16 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Persistencia de sesión: si ya hay una sesión guardada, entrar directo al
-    // dashboard sin volver a pedir credenciales. Si el token quedó invalidado
-    // (p. ej. se inició sesión en otro celular), la primera llamada al backend
-    // dará 401 y el interceptor devolverá a login automáticamente.
+    // Auto-login SOLO para residentes: su celular es personal, así que entrar
+    // directo al dashboard es cómodo y seguro. El admin NO se auto-loguea porque
+    // usa un terminal compartido en la residencia y debe escribir su contraseña.
+    // Si el token quedó invalidado (sesión iniciada en otro dispositivo), la
+    // primera llamada al backend dará 401 y el interceptor devolverá a login.
     if (this.authService.isAuthenticated()) {
       const user = this.authService.currentUser();
-      this.redirigirPorRol(user?.role, user?.firstLogin);
+      if (user?.role === 'RESIDENTE') {
+        this.redirigirPorRol(user.role, user.firstLogin);
+      }
     }
   }
 
