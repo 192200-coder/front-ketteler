@@ -104,7 +104,16 @@
           <i class="fa-regular fa-file-lines"></i>
           <span>Ver reportes</span>
         </button>
+        <button class="btn-action-gris" [disabled]="respaldando()" (click)="respaldarAhora()">
+          <i class="fa-solid fa-database"></i>
+          <span>{{ respaldando() ? 'Respaldando...' : 'Respaldar ahora' }}</span>
+        </button>
       </div>
+      @if (mensajeRespaldo()) {
+        <p class="mensaje-respaldo" [class.error]="respaldoFallo()" role="status">
+          {{ mensajeRespaldo() }}
+        </p>
+      }
     </section>
   </div>
 </main>

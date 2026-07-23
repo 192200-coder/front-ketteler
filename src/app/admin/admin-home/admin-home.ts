@@ -31,6 +31,11 @@ export class AdminHomeComponent implements OnInit {
   cargandoKpis = signal(true);
   cargandoActividades = signal(true);
 
+  // Respaldo manual del sistema
+  respaldando = signal(false);
+  mensajeRespaldo = signal<string | null>(null);
+  respaldoFallo = signal(false);
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -100,6 +105,27 @@ export class AdminHomeComponent implements OnInit {
       default:
         return tipo ?? '—';
     }
+  }
+
+  // Genera un respaldo en el momento (util antes de una actualizacion).
+  respaldarAhora() {
+    if (this.respaldando()) return;
+
+    this.respaldando.set(true);
+    this.mensajeRespaldo.set(null);
+
+    this.http.post<{ type: string; listMessage: string[] }>(`${API_BASE_URL}/backup`, {}).subscribe({
+      next: (res) => {
+        this.respaldando.set(false);
+        this.respaldoFallo.set(res.type !== 'success');
+        this.mensajeRespaldo.set((res.listMessage ?? []).join(' · '));
+      },
+      error: () => {
+        this.respaldando.set(false);
+        this.respaldoFallo.set(true);
+        this.mensajeRespaldo.set('No se pudo generar el respaldo. Revisa que el sistema esté activo.');
+      },
+    });
   }
 
   goToGestionarUsuarios() {
