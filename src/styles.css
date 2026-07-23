@@ -220,6 +220,27 @@ body {
   white-space: nowrap;
 }
 
+/* Botón primario (navy). Definición ÚNICA compartida por las pantallas de admin
+   (crear/editar/gestión de usuarios, cambiar contraseña). Antes estaba duplicado en
+   cada componente. Login usa su propia variante por ser otro contexto visual. */
+.btn-primary {
+  background-color: #2e3b9e;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #26317f;
+}
+.btn-primary:disabled {
+  background-color: #9aa0c4;
+  cursor: not-allowed;
+}
+
 /* ===== Skeletons de carga ===== */
 /* Placeholders grises con shimmer mientras responde el backend. */
 .skeleton {

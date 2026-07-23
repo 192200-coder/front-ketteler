@@ -1,10 +1,4 @@
+/* El estilo base está en styles.css (global). Aquí solo el ancho (dos botones en fila). */
 .btn-primary {
-  background-color: #2e3b9e;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
   width: 48%;
 }
