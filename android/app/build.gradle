@@ -1,5 +1,14 @@
 apply plugin: 'com.android.application'
 
+// Credenciales de firma para el APK de distribucion (release).
+// Se leen de android/keystore.properties, que NO se sube a git.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+def hayFirma = keystorePropertiesFile.exists()
+if (hayFirma) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.casaketteler.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,10 +25,25 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (hayFirma) {
+            release {
+                storeFile rootProject.file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // Sin la firma, el APK release no se puede instalar en un celular.
+            if (hayFirma) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }

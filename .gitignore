@@ -54,3 +54,7 @@ todo_el_codigo_angular.txt
 
 # Limpieza de rutas accidentales
 ~/
+# Llave de firma del APK: NUNCA subir a git (secreto)
+android/keystore.properties
+android/*.keystore
+*.keystore
