@@ -95,6 +95,7 @@
           <th scope="col">Residente</th>
           <th scope="col">Fecha y hora</th>
           <th scope="col">Tipo</th>
+          <th scope="col">Motivo</th>
           <th scope="col">Similitud</th>
           <th scope="col">Detalle</th>
         </tr>
@@ -106,13 +107,14 @@
               <td><span class="skeleton sk-line lg"></span></td>
               <td><span class="skeleton sk-line md"></span></td>
               <td><span class="skeleton sk-line sm"></span></td>
+              <td><span class="skeleton sk-line md"></span></td>
               <td><span class="skeleton sk-line sm"></span></td>
               <td><span class="skeleton sk-line md"></span></td>
             </tr>
           }
         } @else if (reportes().length === 0) {
           <tr>
-            <td colspan="5" style="text-align: center; padding: 2rem">
+            <td colspan="6" style="text-align: center; padding: 2rem">
               Sin eventos en el rango seleccionado.
             </td>
           </tr>
@@ -133,6 +135,9 @@
                     >⚠</span
                   >
                 }
+              </td>
+              <td class="celda-motivo" [title]="ev.description || ''">
+                {{ ev.description || '—' }}
               </td>
               <td>
                 {{

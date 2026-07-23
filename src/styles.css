@@ -211,6 +211,15 @@ body {
   border: 0;
 }
 
+/* Celda de motivo: si el texto es largo (caso "otros"), se recorta al ancho
+   disponible con puntos suspensivos. El texto completo queda en el title. */
+.celda-motivo {
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ===== Skeletons de carga ===== */
 /* Placeholders grises con shimmer mientras responde el backend. */
 .skeleton {

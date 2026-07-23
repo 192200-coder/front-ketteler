@@ -15,6 +15,7 @@ interface AttendanceEvent {
   esAnomalia: boolean;
   motivoFallo: string | null;
   serverSimilarity: number | null;
+  description: string | null; // motivo que declaró el residente al marcar
 }
 
 interface UsuarioFiltro {
