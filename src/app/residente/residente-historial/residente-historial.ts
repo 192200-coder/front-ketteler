@@ -9,6 +9,7 @@ interface EventoAsistencia {
   eventType: 'ENTRADA' | 'SALIDA' | 'INTENTO_FALLIDO';
   esAnomalia: boolean;
   motivoFallo: string | null;
+  description: string | null;
 }
 
 @Component({
@@ -40,7 +41,8 @@ export class ResidenteHistorialComponent implements OnInit {
           hora: this.datePipe.transform(e.eventTimestamp, 'hh:mm a') ?? '-',
           tipo: this.etiquetaTipo(e.eventType),
           esAnomalia: e.esAnomalia,
-          motivo: e.motivoFallo,
+          // Motivo de salida en 'description'; para intentos fallidos, el porqué del fallo.
+          motivo: e.eventType === 'INTENTO_FALLIDO' ? e.motivoFallo : e.description,
         })));
         this.cargando.set(false);
       },

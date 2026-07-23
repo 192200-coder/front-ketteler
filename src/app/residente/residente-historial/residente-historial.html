@@ -19,12 +19,10 @@
         </div>
         <div class="history-details">
           <span class="history-date">{{ ev.tipo }} — {{ ev.fecha }}</span>
-          <span class="history-time">
-            {{ ev.hora }}
-            @if (ev.motivo) {
-              · {{ ev.motivo }}
-            }
-          </span>
+          <span class="history-time">{{ ev.hora }}</span>
+          @if (ev.motivo) {
+            <span class="history-motivo" [title]="ev.motivo">{{ ev.motivo }}</span>
+          }
         </div>
         @if (ev.esAnomalia) {
           <div
