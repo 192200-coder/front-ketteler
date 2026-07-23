@@ -7,9 +7,12 @@
   </header>
 
   <section class="perfil-hero">
-    <!-- Espacio discreto reservado para la foto del residente (o logo). -->
-    <div class="avatar-placeholder" aria-hidden="true">
-      <i class="fa-solid fa-user"></i>
+    <div class="avatar-placeholder">
+      @if (fotoUrl()) {
+        <img [src]="fotoUrl()" alt="Foto de perfil" class="avatar-img" />
+      } @else {
+        <i class="fa-solid fa-user" aria-hidden="true"></i>
+      }
     </div>
     <h1 class="perfil-nombre">
       {{ profileService.perfil()?.firstName || authService.currentUser()?.firstName }}
