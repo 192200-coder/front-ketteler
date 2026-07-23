@@ -1,10 +1,4 @@
 <main class="mobile-container">
-  @if (!enModoRegistro()) {
-    <header class="header-actions">
-      <span class="brand-small">Casa Ketteler</span>
-    </header>
-  }
-
   <section class="welcome-section">
     <div class="welcome-row">
       <h1
@@ -20,7 +14,6 @@
         <i class="fa-solid fa-circle-user"></i>
       </button>
     </div>
-    <p class="welcome-subtitle">Toca tu nombre para ver tu perfil</p>
   </section>
 
   @if (mensajeRed()) {

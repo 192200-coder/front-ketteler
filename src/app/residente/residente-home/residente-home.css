@@ -45,7 +45,7 @@
 
 /* Seccion Bienvenida */
 .welcome-section {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.8rem;
 }
 .welcome-title {
   font-size: 1.6rem;
@@ -75,13 +75,13 @@
   align-items: center;
   gap: 0.5rem;
 }
-/* Mensaje de registro compacto: aunque el error sea largo, no deforma el calce */
+/* Mensaje de registro con letra más chica (para no deformar el calce),
+   pero SIN cortar el texto: se muestra completo. */
 .mensaje-registro {
   font-size: 0.78rem;
+  line-height: 1.35;
   padding: 0.5rem 0.75rem;
   margin-bottom: 0.6rem;
-  max-height: 4.2rem;
-  overflow-y: auto;
 }
 
 /* Badge de Wi-Fi Inteligente */
@@ -93,7 +93,7 @@
   border-radius: 25px;
   font-size: 0.8rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.8rem;
   cursor: pointer;
   transition: all 0.3s;
 }
