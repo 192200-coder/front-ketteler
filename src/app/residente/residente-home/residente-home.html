@@ -8,10 +8,14 @@
         (click)="irAPerfil()"
         (keyup.enter)="irAPerfil()"
       >
-        Welcome, {{ authService.currentUser()?.firstName }}
+        Bienvenido, {{ authService.currentUser()?.firstName }}
       </h1>
       <button class="btn-perfil" (click)="irAPerfil()" aria-label="Ver mi perfil">
-        <i class="fa-solid fa-circle-user"></i>
+        @if (fotoUrl()) {
+          <img [src]="fotoUrl()" alt="" class="perfil-mini-foto" />
+        } @else {
+          <i class="fa-solid fa-circle-user"></i>
+        }
       </button>
     </div>
   </section>

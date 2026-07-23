@@ -68,6 +68,15 @@
   color: #777;
   font-size: 0.85rem;
 }
+/* Foto del residente dentro del botón de perfil (cae al ícono si no hay foto) */
+.perfil-mini-foto {
+  display: block;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* Título + botón de perfil en la misma línea (perfil a la altura del Welcome) */
 .welcome-row {
   display: flex;

@@ -49,6 +49,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
   mensajeRed = signal<string | null>(null);
   mensajeRegistro = signal<string | null>(null);
   registroExitoso = signal(false); // true = último mensaje es de éxito (verde); false = error (rojo)
+  fotoUrl = signal<string | null>(null); // foto del residente para el icono de perfil
   permisoCamaraDenegado = signal(false);
   camaraActiva = signal(false); // cámara abierta en vivo, esperando captura manual
 
@@ -82,6 +83,7 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
       next: async () => {
         this.cargarProximaAccion();
         this.cargarRegistroHoy();
+        this.cargarFoto();
         await this.verificarRed();
       },
     });
@@ -89,6 +91,16 @@ export class ResidenteHomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.detenerCamara();
+    const url = this.fotoUrl();
+    if (url) URL.revokeObjectURL(url);
+  }
+
+  // Foto del residente (thumbnail comprimido del backend) para el icono de perfil.
+  private cargarFoto() {
+    this.http.get(`${API_BASE_URL}/myphoto`, { responseType: 'blob' }).subscribe({
+      next: (blob) => this.fotoUrl.set(URL.createObjectURL(blob)),
+      error: () => this.fotoUrl.set(null),
+    });
   }
 
   private cargarProximaAccion() {
