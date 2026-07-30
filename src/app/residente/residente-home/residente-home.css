@@ -117,11 +117,11 @@
 }
 .wifi-badge.connected {
   background-color: #e8f8f5;
-  color: #2ecc71;
+  color: #1d7f47;
 }
 .wifi-badge.disconnected {
   background-color: #fdedec;
-  color: #e74c3c;
+  color: #d22b1a;
   box-shadow: 0 0 10px rgba(231, 76, 60, 0.1);
 }
 
@@ -384,7 +384,7 @@
 .btn-capture {
   width: 100%;
   padding: 0.9rem;
-  background: #1e8e3e;
+  background: #1d873b;
   color: #fff;
   border: none;
   border-radius: 8px;

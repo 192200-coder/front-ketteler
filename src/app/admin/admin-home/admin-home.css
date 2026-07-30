@@ -166,7 +166,7 @@
   gap: 15px;
   font-size: 1rem;
   font-weight: 600;
-  color: #117a65;
+  color: #0f6a58;
   cursor: pointer;
   transition: transform 0.2s, background-color 0.2s;
 }
@@ -236,7 +236,7 @@
   border-radius: 8px;
   font-size: 0.85rem;
   background-color: #e5f3ea;
-  color: #1e7f44;
+  color: #1e7d43;
 }
 .mensaje-respaldo.error {
   background-color: #fdecea;

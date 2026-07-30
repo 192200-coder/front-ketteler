@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { API_BASE_URL } from '../config/api.config';
 import { safeGetItem, safeSetItem, safeRemoveItem } from '../utils/storage.util';
+import { ProfileService } from './profile.service';
 
 export interface LoginResponse {
   type: 'success' | 'error' | 'warning' | 'exception';
@@ -33,6 +34,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private profileService: ProfileService,
   ) {}
 
   login(email: string, password: string): Observable<LoginResponse> {
@@ -45,6 +47,9 @@ export class AuthService {
           const sesionPersistente = response.role === 'RESIDENTE';
           safeSetItem(TOKEN_KEY, response.token, sesionPersistente);
           safeSetItem(USER_KEY, JSON.stringify(response), sesionPersistente);
+          // El perfil que quedó en memoria es el del usuario anterior: se descarta
+          // para que la nueva sesión no vea datos ajenos.
+          this.profileService.limpiar();
           this.currentUser.set(response);
           this.lastPasswordUsed = password;
         }
@@ -77,6 +82,9 @@ export class AuthService {
   logout(): void {
     safeRemoveItem(TOKEN_KEY);
     safeRemoveItem(USER_KEY);
+    // El perfil vive en memoria, no en el almacenamiento: si no se borra aqui,
+    // sobrevive al cierre de sesion y el siguiente usuario ve los datos del anterior.
+    this.profileService.limpiar();
     this.currentUser.set(null);
     this.lastPasswordUsed = null;
     this.router.navigate(['/login']);
