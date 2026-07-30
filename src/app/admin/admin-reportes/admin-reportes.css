@@ -25,7 +25,8 @@
   flex-direction: column;
 }
 
-.filter-group label {
+.filter-group label,
+.filter-group .label-espaciador {
   font-size: 14px;
   margin-bottom: 8px;
   font-weight: 500;
@@ -54,7 +55,7 @@
 }
 
 .btn-success {
-  background-color: #28a745;
+  background-color: #218838;
   color: white;
   border: none;
   padding: 10px 24px;
@@ -68,6 +69,12 @@
 
 .custom-table { width: 100%; border-collapse: collapse; }
 .custom-table th, .custom-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #f0f0f0; }
-.custom-table th { color: #6c757d; font-size: 14px; }
+.custom-table th { color: #6b747c; font-size: 14px; }
 
-
+/* El titulo principal paso de <h2> a <h1> por accesibilidad: cada pagina debe
+   tener un encabezado de nivel 1. Se conserva el tamano y los margenes que el
+   navegador daba al <h2>, para que la apariencia no cambie. */
+h1 {
+  font-size: 1.5em;
+  margin-block: 0.83em;
+}

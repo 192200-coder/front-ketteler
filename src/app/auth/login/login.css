@@ -19,7 +19,7 @@
 }
 
 .top-title {
-  color: #999;
+  color: #757575;
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 1px;
@@ -92,14 +92,14 @@
 .icon-left {
   position: absolute;
   left: 15px;
-  color: #999;
+  color: #757575;
   font-size: 1.1rem;
 }
 
 .icon-right {
   position: absolute;
   right: 15px;
-  color: #999;
+  color: #757575;
   cursor: pointer;
   font-size: 1.1rem;
 }

@@ -56,7 +56,7 @@
 }
 .kpi-label {
   font-size: 0.8rem;
-  color: #888;
+  color: #767676;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
@@ -113,7 +113,7 @@
 /* Estados de la acción (Entrada, Salida, Anomalía) */
 .action-type {
   font-size: 0.75rem;
-  color: #888;
+  color: #767676;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -126,7 +126,7 @@
   color: #1565c0; /* Azul para salidas estándar */
 }
 .action-type.type-anomaly {
-  color: #d93025 !important; /* Rojo de alerta para faltas/intentos fallidos */
+  color: #ca2d22 !important; /* Rojo de alerta para faltas/intentos fallidos */
 }
 
 /* Animación sutil para el ícono de peligro */
@@ -240,7 +240,7 @@
 }
 .mensaje-respaldo.error {
   background-color: #fdecea;
-  color: #d93025;
+  color: #ca2d22;
 }
 
 /* Ajustes Responsivos */

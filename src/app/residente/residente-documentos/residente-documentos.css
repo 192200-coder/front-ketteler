@@ -49,7 +49,7 @@
   padding: 0.6rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #27ae60;
+  color: #1b7842;
   cursor: pointer;
   border-radius: 20px;
   display: flex;
@@ -89,7 +89,7 @@
 }
 .doc-subtitle {
   font-size: 0.75rem;
-  color: #999;
+  color: #757575;
   margin-bottom: 1rem;
 }
 
@@ -114,7 +114,7 @@
 }
 .drop-text {
   font-size: 0.85rem;
-  color: #a569bd;
+  color: #9a57b5;
   font-weight: 600;
 }
 
@@ -160,7 +160,7 @@
   justify-content: center;
   align-items: center;
   gap: 3px;
-  color: #7d6693;
+  color: #79638e;
   cursor: pointer;
   font-size: 0.7rem;
   font-weight: 600;

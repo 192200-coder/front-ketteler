@@ -7,12 +7,12 @@
 
   <h1 class="page-title">Historial de asistencia</h1>
 
-  <section class="history-list">
+  <section class="history-list" tabindex="0" role="region" aria-label="Historial de asistencia">
     @for (ev of eventos(); track $index) {
       <div class="history-item">
         <div class="status-indicator">
           @if (ev.tipo === 'Intento fallido') {
-            <i class="fa-solid fa-circle-xmark" style="color: #d93025; font-size: 1.8rem"></i>
+            <i class="fa-solid fa-circle-xmark" style="color: #ca2d22; font-size: 1.8rem"></i>
           } @else {
             <i class="fa-solid fa-circle-check check-icon"></i>
           }
@@ -27,14 +27,14 @@
         @if (ev.esAnomalia) {
           <div
             class="status-badge"
-            style="background: #fce8e6; color: #d93025; border-color: #f5c6cb"
+            style="background: #fce8e6; color: #ca2d22; border-color: #f5c6cb"
           >
             Anomalía
           </div>
         }
       </div>
     } @empty {
-      <p style="text-align: center; color: #999; padding: 2rem 0">Sin registros de asistencia.</p>
+      <p style="text-align: center; color: #757575; padding: 2rem 0">Sin registros de asistencia.</p>
     }
   </section>
 

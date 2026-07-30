@@ -1,7 +1,7 @@
-<div class="admin-container">
+<main class="admin-container">
   <div class="header">
     <div class="title-section">
-      <h2>Reportes de asistencia</h2>
+      <h1>Reportes de asistencia</h1>
       <p>Genera y descarga reportes</p>
     </div>
     <button class="btn-back" routerLink="/admin-home">&lt; Atrás</button>
@@ -9,8 +9,10 @@
 
   <div class="filter-card">
     <div class="filter-group">
-      <label>Tipo de reporte</label>
-      <div class="button-group">
+      <!-- No es un <label>: no etiqueta un campo, sino un grupo de botones.
+           Se declara como grupo con nombre para que se anuncie correctamente. -->
+      <span class="label-espaciador" id="etiqueta-tipo-reporte">Tipo de reporte</span>
+      <div class="button-group" role="group" aria-labelledby="etiqueta-tipo-reporte">
         <button class="btn-tab" [class.active]="rango() === 'diario'" (click)="setRango('diario')">
           Diario
         </button>
@@ -32,8 +34,9 @@
     </div>
 
     <div class="filter-group">
-      <label>Fecha</label>
+      <label for="filtro-fecha">Fecha</label>
       <input
+        id="filtro-fecha"
         type="date"
         class="date-input"
         [(ngModel)]="fechaSeleccionada"
@@ -42,8 +45,8 @@
     </div>
 
     <div class="filter-group">
-      <label>Residente</label>
-      <select class="date-input" [(ngModel)]="idUserFiltro" (change)="onFiltroCambio()">
+      <label for="filtro-residente">Residente</label>
+      <select id="filtro-residente" class="date-input" [(ngModel)]="idUserFiltro" (change)="onFiltroCambio()">
         <option value="">Todos</option>
         @for (u of usuarios(); track u.idUser) {
           <option [value]="u.idUser">{{ u.firstName }} {{ u.surName }}</option>
@@ -52,8 +55,8 @@
     </div>
 
     <div class="filter-group">
-      <label>Tipo de evento</label>
-      <select class="date-input" [(ngModel)]="tipoFiltro" (change)="onTipoCambio()">
+      <label for="filtro-tipo">Tipo de evento</label>
+      <select id="filtro-tipo" class="date-input" [(ngModel)]="tipoFiltro" (change)="onTipoCambio()">
         <option value="">Todos</option>
         <option value="ENTRADA">Entradas</option>
         <option value="SALIDA">Salidas</option>
@@ -62,7 +65,7 @@
     </div>
 
     <div class="filter-group">
-      <label>&nbsp;</label>
+      <span class="label-espaciador" aria-hidden="true">&nbsp;</span>
       <div style="display: flex; gap: 0.5rem">
         <button class="btn-success" (click)="descargar('excel')">
           <i class="fa-solid fa-file-excel"></i> Excel
@@ -144,7 +147,7 @@
                   ev.serverSimilarity != null ? (ev.serverSimilarity | number: '1.0-1') + '%' : '—'
                 }}
               </td>
-              <td style="font-size: 0.85rem; color: #6c757d">{{ ev.motivoFallo || '—' }}</td>
+              <td style="font-size: 0.85rem; color: #6b747c">{{ ev.motivoFallo || '—' }}</td>
             </tr>
           }
         }
@@ -192,4 +195,4 @@
       </div>
     }
   </div>
-</div>
+</main>

@@ -21,7 +21,7 @@
   margin-bottom: 1.5rem;
 }
 .brand-small {
-  color: #aaa;
+  color: #747474;
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -53,19 +53,28 @@
   color: #111;
   margin-bottom: 0.3rem;
 }
-/* El titulo de bienvenida es tappable: lleva al perfil */
+/* El titulo de bienvenida es tappable: lleva al perfil.
+   Es un <button> real dentro del <h1>, para que siga siendo un encabezado y a la
+   vez funcione con teclado. Se le quita la apariencia de boton. */
 .welcome-link {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
 }
 .welcome-chevron {
   font-size: 0.9rem;
   color: #bbb;
 }
 .welcome-subtitle {
-  color: #777;
+  color: #767676;
   font-size: 0.85rem;
 }
 /* Foto del residente dentro del botón de perfil (cae al ícono si no hay foto) */
@@ -168,7 +177,7 @@
   font-weight: 500;
 }
 .status-ok {
-  color: #27ae60;
+  color: #1b7842;
   font-weight: 600;
 }
 
@@ -286,7 +295,7 @@
   justify-content: center;
   align-items: center;
   gap: 3px;
-  color: #7d6693;
+  color: #79638e;
   cursor: pointer;
   font-size: 0.7rem;
   font-weight: 600;
@@ -391,7 +400,7 @@
   width: 100%;
   padding: 0.7rem;
   background: transparent;
-  color: #6c757d;
+  color: #6b747c;
   border: 1px solid #ccc;
   border-radius: 8px;
   cursor: pointer;

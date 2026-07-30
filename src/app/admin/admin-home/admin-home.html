@@ -9,7 +9,7 @@
       >
         <i class="fa-solid fa-key"></i>
       </button>
-      <button class="btn-logout-admin" (click)="logout()">
+      <button class="btn-logout-admin" (click)="logout()" title="Cerrar sesion" aria-label="Cerrar sesion">
         <i class="fa-solid fa-arrow-right-from-bracket"></i>
       </button>
     </div>
@@ -87,7 +87,7 @@
           </div>
           }
           @if (actividades().length === 0) {
-            <p style="color: #888; font-size: 0.9rem; padding: 0.5rem 0">Sin actividad reciente.</p>
+            <p style="color: #767676; font-size: 0.9rem; padding: 0.5rem 0">Sin actividad reciente.</p>
           }
         }
       </div>

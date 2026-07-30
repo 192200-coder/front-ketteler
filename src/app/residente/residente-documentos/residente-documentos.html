@@ -27,10 +27,10 @@
     <p class="login-error">{{ mensaje() }}</p>
   }
 
-  <section class="upload-scroll-area">
+  <section class="upload-scroll-area" tabindex="0" role="region" aria-label="Documentos para subir">
     @if (activeTab() === 'subir') {
       <div class="document-card">
-        <h3 class="doc-title">Constancia de pago</h3>
+        <h2 class="doc-title">Constancia de pago</h2>
         <p class="doc-subtitle">Una vez por mes - PDF, JPG o PNG (máx. 10 MB)</p>
         <div class="drop-zone" (click)="triggerFileInput('filePago')">
           <i class="fa-regular fa-file-lines doc-icon"></i>
@@ -43,7 +43,7 @@
       </div>
 
       <div class="document-card">
-        <h3 class="doc-title">Constancia de notas</h3>
+        <h2 class="doc-title">Constancia de notas</h2>
         <p class="doc-subtitle">Una vez por semestre - PDF, JPG o PNG (máx. 10 MB)</p>
         <div class="drop-zone" (click)="triggerFileInput('fileNotas')">
           <i class="fa-regular fa-file-lines doc-icon"></i>
@@ -62,7 +62,7 @@
 
     @if (activeTab() === 'renuncia') {
       <div class="document-card">
-        <h3 class="doc-title">Carta de renuncia</h3>
+        <h2 class="doc-title">Carta de renuncia</h2>
         <p class="doc-subtitle">PDF, JPG o PNG (máx. 10 MB)</p>
 
         @if (miRenuncia()) {
@@ -109,7 +109,7 @@
       } @else {
         @for (doc of misDocumentos(); track doc.idDocumentGeneral) {
           <div class="document-card">
-            <h3 class="doc-title">{{ doc.type }}</h3>
+            <h2 class="doc-title">{{ doc.type }}</h2>
             <p class="doc-subtitle">
               Estado: <span [class]="badgeClass(doc.status)">{{ doc.status }}</span>
             </p>
@@ -126,10 +126,10 @@
       }
       
       @if (documentosEntrada().length > 0) {
-        <h3 class="doc-title" style="margin-top: 1rem">Documentos de entrada</h3>
+        <h2 class="doc-title" style="margin-top: 1rem">Documentos de entrada</h2>
         @for (doc of documentosEntrada(); track doc.idDocumentEnter) {
           <div class="document-card">
-            <h3 class="doc-title">{{ doc.nameDocumentEnter }}</h3>
+            <h2 class="doc-title">{{ doc.nameDocumentEnter }}</h2>
             <p class="doc-subtitle">
               Estado: <span [class]="badgeClass(doc.status)">{{ doc.status }}</span>
             </p>

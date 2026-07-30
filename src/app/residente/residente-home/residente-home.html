@@ -1,14 +1,14 @@
 <main class="mobile-container">
   <section class="welcome-section">
     <div class="welcome-row">
-      <h1
-        class="welcome-title welcome-link"
-        role="button"
-        tabindex="0"
-        (click)="irAPerfil()"
-        (keyup.enter)="irAPerfil()"
-      >
-        Bienvenido, {{ authService.currentUser()?.firstName }}
+      <!-- El titulo sigue llevando al perfil, pero el clic va en un <button> real
+           anidado y no en el <h1>. Ponerle role="button" al encabezado le quitaba
+           su rol de titulo: los lectores de pantalla dejaban de anunciarlo como
+           el encabezado principal de la pagina. -->
+      <h1 class="welcome-title">
+        <button type="button" class="welcome-link" (click)="irAPerfil()">
+          Bienvenido, {{ authService.currentUser()?.firstName }}
+        </button>
       </h1>
       <button class="btn-perfil" (click)="irAPerfil()" aria-label="Ver mi perfil">
         @if (fotoUrl()) {
@@ -140,7 +140,16 @@
     }
 
     <div class="input-group">
-      <select id="motivoSalida" [(ngModel)]="selectedMotive" class="select-motive">
+      <!-- Sin nombre accesible, un lector de pantalla solo anunciaba "lista
+           desplegable". El nombre cambia segun toque entrar o salir. -->
+      <select
+        id="motivoSalida"
+        [(ngModel)]="selectedMotive"
+        class="select-motive"
+        [attr.aria-label]="
+          proximaAccion() === 'entrada' ? 'Motivo de entrada (opcional)' : 'Motivo de salida'
+        "
+      >
         <!-- Al ENTRAR el motivo es opcional (se asume el retorno); al SALIR es obligatorio. -->
         <option value="" [disabled]="proximaAccion() === 'salida'" selected>
           {{

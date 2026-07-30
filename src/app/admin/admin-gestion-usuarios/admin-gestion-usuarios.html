@@ -1,8 +1,8 @@
-<div class="admin-container">
+<main class="admin-container">
   <div class="header">
     <div class="title-section">
       <button class="btn-back" routerLink="/admin-home">&lt; Atrás</button>
-      <h2>Gestión de usuarios</h2>
+      <h1>Gestión de usuarios</h1>
       <p>Administra las cuentas de residentes</p>
     </div>
     <button class="btn-primary" routerLink="/admin-crear-usuario">+ Nuevo usuario</button>
@@ -48,7 +48,7 @@
           }
         } @else if (usuariosFiltrados().length === 0) {
           <tr>
-            <td colspan="5" style="text-align: center; padding: 1.5rem; color: #6c757d">
+            <td colspan="5" style="text-align: center; padding: 1.5rem; color: #6b747c">
               @if (filtro().trim()) {
                 No se encontraron usuarios para «{{ filtro() }}».
               } @else {
@@ -149,7 +149,7 @@
         (click)="$event.stopPropagation()"
       >
         <h3 style="margin-top: 0">Contraseña restablecida</h3>
-        <p style="color: #6c757d; font-size: 0.9rem">
+        <p style="color: #6b747c; font-size: 0.9rem">
           Entrega esta nueva contraseña temporal a <strong>{{ usuarioReseteado() }}</strong>
           (también se envió a su correo).
         </p>
@@ -177,7 +177,7 @@
           </p>
         </div>
 
-        <p style="font-size: 0.8rem; color: #d93025; margin-bottom: 1.5rem">
+        <p style="font-size: 0.8rem; color: #ca2d22; margin-bottom: 1.5rem">
           ⚠️ Esta contraseña no se volverá a mostrar. Cópiala o anótala ahora.
         </p>
 
@@ -190,4 +190,4 @@
       </div>
     </div>
   }
-</div>
+</main>

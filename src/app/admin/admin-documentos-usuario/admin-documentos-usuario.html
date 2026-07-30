@@ -1,7 +1,7 @@
-<div class="admin-container">
+<main class="admin-container">
   <div class="header">
     <div class="title-section">
-      <h2>Documentos del residente</h2>
+      <h1>Documentos del residente</h1>
       <p>Revisa, aprueba o rechaza los documentos subidos</p>
     </div>
     <button class="btn-back" (click)="volver()">&lt; Volver</button>
@@ -12,7 +12,7 @@
   }
 
   <!-- 1. Documentos generales -->
-  <div class="table-card" style="padding: 1rem">
+  <div class="table-card" style="padding: 1rem" tabindex="0" role="region" aria-label="Documentos generales">
     <div
       style="
         display: flex;
@@ -156,7 +156,7 @@
   </div>
 
   <!-- 2. Documentos de entrada -->
-  <div class="table-card">
+  <div class="table-card" tabindex="0" role="region" aria-label="Documentos de entrada">
     <h3 style="margin-top: 0">Documentos de entrada</h3>
     <table class="custom-table">
       <thead>
@@ -240,7 +240,7 @@
   </div>
 
   <!-- 3. Carta de renuncia -->
-  <div class="table-card">
+  <div class="table-card" tabindex="0" role="region" aria-label="Carta de renuncia">
     <div
       style="
         display: flex;
@@ -385,4 +385,4 @@
       </tbody>
     </table>
   </div>
-</div>
+</main>

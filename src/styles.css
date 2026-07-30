@@ -64,7 +64,7 @@ body {
 }
 .title-section p {
   margin: 0;
-  color: #6c757d;
+  color: #6b747c;
   font-size: 14px;
 }
 
@@ -89,7 +89,7 @@ body {
   border-bottom: 1px solid #f0f0f0;
 }
 .custom-table th {
-  color: #6c757d;
+  color: #6b747c;
   font-weight: 500;
   font-size: 14px;
 }
@@ -126,7 +126,7 @@ body {
 }
 .badge-activo {
   background-color: #e6f4ea;
-  color: #1e8e3e;
+  color: #1a7d37;
 }
 .badge-inactivo {
   background-color: #f1f3f4;
@@ -134,11 +134,11 @@ body {
 }
 .badge-completo {
   background-color: #e6f4ea;
-  color: #1e8e3e;
+  color: #1a7d37;
 }
 .badge-ausente {
   background-color: #fce8e6;
-  color: #d93025;
+  color: #ca2d22;
 }
 
 /* Botones de acción en tablas (editar / eliminar) */
@@ -156,7 +156,7 @@ body {
   color: #2e3b9e;
 }
 .icon-btn.delete {
-  color: #d93025;
+  color: #ca2d22;
 }
 
 /* --- Sistema de formularios (crear / editar usuario) --- */

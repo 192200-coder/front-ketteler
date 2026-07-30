@@ -70,7 +70,7 @@
 /* Motivo de la salida: una línea, recortada al ancho disponible */
 .history-motivo {
   font-size: 0.8rem;
-  color: #888;
+  color: #767676;
   margin-top: 2px;
   max-width: 100%;
   white-space: nowrap;
@@ -86,14 +86,14 @@
 
 .history-time {
   font-size: 0.8rem;
-  color: #999;
+  color: #757575;
   margin-top: 2px;
 }
 
 /* Badge de estado (Completo) */
 .status-badge {
   background-color: #e8f8f5;
-  color: #27ae60;
+  color: #1b7842;
   padding: 0.3rem 0.8rem;
   border-radius: 15px;
   font-size: 0.75rem;
@@ -125,7 +125,7 @@
   justify-content: center;
   align-items: center;
   gap: 3px;
-  color: #7d6693;
+  color: #79638e;
   cursor: pointer;
   font-size: 0.7rem;
   font-weight: 600;
