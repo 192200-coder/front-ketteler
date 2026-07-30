@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:web": "ng build --configuration=web",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:front-ketteler": "node dist/front-ketteler/server/server.mjs",
